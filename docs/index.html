@@ -137,6 +137,7 @@
   </div>
 </section>
 
+
 <section class="section">
   <div class="container is-max-desktop">
     <!-- Abstract. -->
@@ -145,13 +146,116 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            
+          For embodied agents capable of physical interaction, the capability to create and understand dialog is crucial to ensure both safety and effectiveness.
+          While DialNav (han2025dialnav) provides a framework for holistic evaluation of the dialog--execution loop in photorealistic indoor navigation, its performance remains limited by a critical scarcity of training data (2K episodes).
+          To address this, we propose an automatic generation pipeline, and construct the <b>RAINbow</b> dataset, a large-scale training dataset with 238K episodes for DialNav.
+          Our pipeline leverages existing VLN dataset into multiturn dialog and creates cost efficicent and high quality dataset.
+          Then, we introduce two additional complementary advances to unlock the data's full potential: (1)
+          <b>Dual-Strategy Training</b>,
+          a navigation training scheme to align the navigation training with the dynamic dialog-navigation loop, and (2) a localization model that leverages VLN knowledge.
+          By combining these complementary solutions, our model substantially outperforms the success rate of the baseline on both <b>Val Seen</b> (58.24, <b>+89%</b>) and <b>Val Unseen</b> (29.05, <b>+100%</b>) splits, establishing a new state of the art.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- DialNav Task -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">DialNav Task</h2>
+        <img src="./static/images/figure1.png" style="display: block; margin: 0 auto;" width="800"/>
+        <div class="content has-text-justified">
+          <p>
+          <strong>Overview of the DialNav task. </strong> <strong>Top:</strong> The Navigator starts at an initial node <em> b</em> and navigates to reach the goal region <em>R</em>. Since the initial instruction is underspecified, the Navigator engages in multi-turn dialog with a remote Guide to acquire additional guidance along the navigation.  
+          <strong>Bottom:</strong> At each step, the Navigator follows a modular decision process: it either proceeds autonomously (<em>Navigation</em>) or requests help (<em>Question Generation</em>). When a question is asked, the remote Guide localizes the Navigator and provides an answer describing the next path to the goal. This forms an alternating loop of dialog and action that continues until the goal region is reached.  
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container is-max-desktop">
+    <!-- Pipeline -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">RAINbow Data Generation Pipeline</h2>
+        <img src="./static/images/figure2.png" style="display: block; margin: 0 auto;" width="800"/>
+        <div class="content has-text-justified">
+          <p>
+          <strong>Overview of the dataset generation pipeline. </strong> <strong>(Left)</strong> We start from existing single-turn fine-grained VLN datasets, where each path is paired with its instruction <em>F_j</em>. 
+          <strong>(Middle)</strong> Multiple sub-trajectories are concatenated into an extended trajectory. The starting node of each sub-trajectory becomes a dialog point <em>v_{d_j}</em>, and at each dialog point, a panoramic caption <em>C_j</em> is generated using a vision–language model. The original fine-grained instructions <em>F_j</em> are repurposed as dialog answers, while the final node defines the goal region $R$. 
+          <strong>(Right)</strong> Caption–instruction pairs <em>(C_j, F_j)</em> are then reformatted into natural multi-turn dialogs using a large language model, producing large-scale dialog-style data for DialNav training.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container is-max-desktop">
+    <!-- Pipeline -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Qualitative Example of RAINbow</h2>
+        <img src="./static/images/figure3.png" style="display: block; margin: 0 auto;" width="800"/>
+        <div class="content has-text-justified">
+          <p>
+          <strong>Qualitative example of RAINbow.</strong>
+          This figure shows a 2-turn dialog episode in RAINbow. 
+          The left column shows the first dialog exchange, and the right column shows the second. 
+          The generated dialogs exhibit a natural conversational flow across turns and are well-grounded in both the Navigator's visual observations (e.g. <em>"fireplace", "pool table"</em>) and the route the Guide describes (e.g. <em>"leave this room", "past the pool table"</em>).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container is-max-desktop">
+    <!-- Pipeline -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Results</h2>
+        <img src="./static/images/table1.png" style="display: block; margin: 0 auto;" width="800"/>
+        <div class="content has-text-justified">
+          <p>
+          <strong>Performance gains from progressively adding components.</strong>
+          <strong>RAINbow</strong>: training with RAINbow dataset.
+          <strong>DST</strong>: training navigation module with Dual-Strategy Training.
+          <strong>GTL</strong>: adopting Graph-based Transformer Localization model.
+          RAINbow alone (Row 2) offers performance gains, but its potential is unlocked when combined with our proposed DST (Row 4), which significantly amplifies its effect. 
+          GTL (Row 5) provides further improvement, leading to the best overall performance.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container is-max-desktop">
+    <!-- Pipeline -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Qualitative Comparison with the Baseline</h2>
+        <img src="./static/images/figure4.png" style="display: block; margin: 0 auto;" width="800"/>
+        <div class="content has-text-justified">
+          <p>
+          <strong>Qualitative comparison on the same task instance between the baseline(left) and Ours (right).</strong>
+          The baseline agent produces broken language with wrong details (marked in red), likely due to dataset scarcity, leading to high localization errors and navigation failure.
+          In contrast, our agent provides richer, well-grounded descriptions (marked in \textbf{bold}), yielding accurate localization and reliable instructions, ultimately leading to successful navigation.
           </p>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 
 <footer class="footer">
   <div class="container">
