@@ -99,14 +99,13 @@ class Evaluator:
     
     def get_shortest(self, scan, start_pano, end_panos):
         shortest_distances = self.shortest_distances[scan]
-        # shortest_paths = self.shortest_paths[scan]
         shortest_distance = np.min([shortest_distances[start_pano][end_pano] for end_pano in end_panos])
         return shortest_distance
     
     def _is_success(self, scan, final_pano, end_panos):
         shortest_distances = self.shortest_distances[scan]
         for end in end_panos:
-            if shortest_distances[final_pano][end] < self.success_margin:
+            if shortest_distances[final_pano][end] <= self.success_margin:
                 return True
         return False
 
@@ -124,19 +123,16 @@ class Evaluator:
 
         scores['trajectory_lengths'] = np.sum([shortest_distances[a][b] for a, b in zip(flattend_path[:-1], flattend_path[1:])])
         scores['trajectory_steps'] = len(flattend_path) - 1
-        # scores['success'] = float(flattend_path[-1] in end_panos)
-        # scores['oracle_success'] = float(any(x in end_panos for x in flattend_path))
 
         scores['success'] = float(self._is_success(scan, flattend_path[-1], end_panos))
         scores['oracle_success'] = float(any(self._is_success(scan, x, end_panos) for x in flattend_path))
         scores['spl'] = scores['success'] * shortest_distance / max(trajectory_distance, shortest_distance, 0.01)
         scores['nav_error'] = np.min([shortest_distances[flattend_path[-1]][end_pano] for end_pano in end_panos])
         scores['gp'] = shortest_distance - scores['nav_error']
-        ERROR_MARGIN = 3
         scores.update(
-            self._cal_dtw(shortest_distances, flattend_path, shortest_path, scores['success'], ERROR_MARGIN)
+            self._cal_dtw(shortest_distances, flattend_path, shortest_path, scores['success'])
         )
-        scores['CLS'] = self._cal_cls(shortest_distances, flattend_path, shortest_path, ERROR_MARGIN)
+        scores['CLS'] = self._cal_cls(shortest_distances, flattend_path, shortest_path)
         scores['gt_lengths'] = int(shortest_distance)
 
         return scores

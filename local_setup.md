@@ -9,6 +9,5 @@ python -m pip install -r /home/master/00_WorkDir/06_RAINbow/requirements.txt
 
 
 ### run 
-
 cd holistic
 bash script/local_script_cvpr.sh

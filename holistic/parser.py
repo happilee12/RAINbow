@@ -33,7 +33,7 @@ def parse_args():
 
     ## navigation setup
     parser.add_argument('--max_action_len', type=int, default=50)
-    parser.add_argument('--mode', type=str, default='navonly')
+    parser.add_argument('--mode', type=str, default='holistic', choices=['navonly', 'gtloc', 'holistic'])
 
     ### output path
     parser.add_argument('--output_path', type=str, default='./output')
@@ -46,17 +46,17 @@ def parse_args():
     parser.add_argument('--wta_mode', type=str, default='navigation_model')
     parser.add_argument('--nav_model', type=str, default='ScaleVLN', choices=['ScaleVLN', 'DialogHistoryAgent'])
     parser.add_argument('--loc_model', type=str, default='DuetLoc', choices=['GCN', 'DuetLoc'])
-    parser.add_argument('--ag_eot_token', action='store_true', default=False)
-    parser.add_argument('--nav_prob_mode', type=str, default='navigation_dialog_history', choices=['navigation', 'navigation_dialog_history'])
+    parser.add_argument('--ag_eot_token', action='store_true', default=False) # TODO del
+    parser.add_argument('--nav_prob_mode', type=str, default='navigation_dialog_history', choices=['navigation', 'navigation_dialog_history'])  # TODO
     parser.add_argument('--nav_wta_question_threshold', type=float, default=0.5)
-    parser.add_argument('--benchmark', type=str, default='dialnav')
+    parser.add_argument('--benchmark', type=str, default='dialnav') 
     parser.add_argument('--success_margin', type=int, default=0)
     
 
     ### nav options
     parser.add_argument('--nav_act_visited_nodes', action='store_true', default=False)
     
-    ### loc options
+    ### loc options  # TODO
     parser.add_argument('--loc_node_feats_dir', type=str, default='')
     parser.add_argument('--loc_geodistance_nodes_path', type=str, default='')
     parser.add_argument('--loc_embedding_dir', type=str, default='')
@@ -65,9 +65,9 @@ def parse_args():
     ### lana options
     parser.add_argument('--qa_clip_tokenizer_path', type=str, default='')
     parser.add_argument('--ag_max_answer_seen_path', type=int, default=20)
-    ### wandb
-    parser.add_argument('--wandb_project', type=str, default='DialNav-Holistic')
-    parser.add_argument('--wandb_log', action='store_true', default=False)
+    # ### wandb
+    # parser.add_argument('--wandb_project', type=str, default='DialNav-Holistic')
+    # parser.add_argument('--wandb_log', action='store_true', default=False)
 
     
     return parser.parse_args()

@@ -13,5 +13,5 @@ paraphrase-en.gz
 dataset/*
 rainbow
 local_*.sh
-local_*.md
+local_setup.md
 output
