@@ -241,7 +241,7 @@ class DialogHistoryAgent(GMapNavAgnetWta):
             self._update_graph_structure(obs, gmaps, ended)
             
             nav_inputs, pano_inputs = self._process_navigation_step(obs, gmaps, ended, nav_idx, language_inputs, txt_embeds)
-            nav_probs, nav_vpids, nav_logits, nav_outs = self._nav_probs(nav_inputs, mode=self.args.nav_prob_mode)
+            nav_probs, nav_vpids, nav_logits, nav_outs = self._nav_probs(nav_inputs)
             gmap_embeds = nav_outs['gmap_embeds']
             gmap_vpids = nav_outs['gmap_vpids']
             for i, gmap in enumerate(gmaps):
@@ -273,7 +273,7 @@ class DialogHistoryAgent(GMapNavAgnetWta):
                     steps[i] += 1
 
             nav_inputs, pano_inputs = self._process_navigation_step(obs, gmaps, ended, nav_idx, language_inputs, txt_embeds)
-            nav_probs, nav_vpids, nav_logits, nav_outs = self._nav_probs(nav_inputs, mode=self.args.nav_prob_mode)
+            nav_probs, nav_vpids, nav_logits, nav_outs = self._nav_probs(nav_inputs)
             self._update_stop_scores(nav_probs, gmaps, obs, ended)
             next_viewpoints, ended = self._get_next_action_with_ref_path(obs, nav_historys, nav_idx, ended)
             self.make_equiv_action(next_viewpoints, gmaps, obs, traj_history)
@@ -400,7 +400,7 @@ class DialogHistoryAgent(GMapNavAgnetWta):
 
             # print(f"[{nav_idx}], language_inputs decoded: {[self.tok.decode(language_inputs['txt_ids'][i]) for i in range(len(language_inputs['txt_ids']))]}")
             nav_inputs, pano_inputs = self._process_navigation_step(obs, gmaps, ended, nav_idx, language_inputs, txt_embeds, steps)
-            nav_probs, nav_vpids, nav_logits, nav_outs = self._nav_probs(nav_inputs,mode=self.args.nav_prob_mode)
+            nav_probs, nav_vpids, nav_logits, nav_outs = self._nav_probs(nav_inputs)
 
             gmap_embeds = nav_outs['gmap_embeds']
             gmap_vpids = nav_outs['gmap_vpids']
@@ -525,7 +525,7 @@ class DialogHistoryAgent(GMapNavAgnetWta):
 
             # print(f"[{nav_idx}], language_inputs decoded: {[self.tok.decode(language_inputs['txt_ids'][i]) for i in range(len(language_inputs['txt_ids']))]}")
             nav_inputs, pano_inputs = self._process_navigation_step(obs, gmaps, ended, nav_idx, language_inputs, txt_embeds, steps)
-            nav_probs, nav_vpids, nav_logits, nav_outs = self._nav_probs(nav_inputs,mode=self.args.nav_prob_mode)
+            nav_probs, nav_vpids, nav_logits, nav_outs = self._nav_probs(nav_inputs)
 
             gmap_embeds = nav_outs['gmap_embeds']
             gmap_vpids = nav_outs['gmap_vpids']

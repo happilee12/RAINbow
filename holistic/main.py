@@ -273,7 +273,6 @@ def setAgents(args, target_envs, env_instructions, evaluator, scans):
             'basepath': args.basepath, 
             'resume_file': args.nav_resume_file,
             'act_visited_nodes': args.nav_act_visited_nodes,
-            'nav_prob_mode': args.nav_prob_mode,
             'question_weight': args.nav_wta_question_threshold,
         }
         navigation_model = DialogHistoryAgent(args.basepath, navigation_model_args)

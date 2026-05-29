@@ -3,7 +3,6 @@ from argparse import Namespace
 def get_default_args(basepath):
     """Get default arguments for ScaleVLN model"""
     return Namespace(
-        nav_prob_mode='navigation_dialog_history',
         act_visited_nodes=True,
         disactivate_stop_node_jump=True,
         angle_feat_size=4,

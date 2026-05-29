@@ -852,16 +852,6 @@ class GlocalTextPathNavCMT(BertPreTrainedModel):
                 batch['vp_img_embeds'], batch['vp_pos_fts'], batch['vp_masks'],
                 batch['vp_nav_masks'], batch['vp_obj_masks'], batch['vp_cand_vpids'],
             )
-        elif mode == 'navigation_dialog_history':
-            return self.forward_navigation_per_step(
-                batch['txt_embeds'], batch['txt_masks'], batch['gmap_history_embeds'], 
-                batch['gmap_step_ids'], batch['gmap_pos_fts'], batch['gmap_masks'],
-                batch['gmap_pair_dists'], batch['gmap_visited_masks'], batch['gmap_vpids'], 
-                batch['vp_img_embeds'], batch['vp_pos_fts'], batch['vp_masks'],
-                batch['vp_nav_masks'], batch['vp_obj_masks'], batch['vp_cand_vpids'],
-            )
-
-            
 
 
 ########

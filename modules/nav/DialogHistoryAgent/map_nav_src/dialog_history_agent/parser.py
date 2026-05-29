@@ -127,7 +127,6 @@ def parse_args():
 
     ### debugs
     parser.add_argument('--disactivate_stop_node_jump', action='store_true', default=False)
-    parser.add_argument('--nav_prob_mode', type=str, default='navigation_dialog_history', choices=['navigation', 'navigation_dialog_history'])
     # parser.add_argument('--expert_policy_weight', type=float, default=0.0)
     parser.add_argument('--episode_training_times', type=int, default=1)
     parser.add_argument('--aug_instance_training_times', type=int, default=1)

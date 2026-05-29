@@ -25,7 +25,7 @@ class VLNBert(nn.Module):
             pano_embeds, pano_masks = self.vln_bert(mode, batch)
             return pano_embeds, pano_masks
 
-        elif mode == 'navigation' or mode == 'navigation_dialog_history':
+        elif mode == 'navigation':
             outs = self.vln_bert(mode, batch)
             return outs
 

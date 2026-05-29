@@ -47,7 +47,6 @@ def parse_args():
     parser.add_argument('--nav_model', type=str, default='ScaleVLN', choices=['ScaleVLN', 'DialogHistoryAgent'])
     parser.add_argument('--loc_model', type=str, default='DuetLoc', choices=['GCN', 'DuetLoc'])
     parser.add_argument('--ag_eot_token', action='store_true', default=False) # TODO del
-    parser.add_argument('--nav_prob_mode', type=str, default='navigation_dialog_history', choices=['navigation', 'navigation_dialog_history'])  # TODO
     parser.add_argument('--nav_wta_question_threshold', type=float, default=0.5)
     parser.add_argument('--benchmark', type=str, default='dialnav') 
     parser.add_argument('--success_margin', type=int, default=0)
@@ -65,9 +64,6 @@ def parse_args():
     ### lana options
     parser.add_argument('--qa_clip_tokenizer_path', type=str, default='')
     parser.add_argument('--ag_max_answer_seen_path', type=int, default=20)
-    # ### wandb
-    # parser.add_argument('--wandb_project', type=str, default='DialNav-Holistic')
-    # parser.add_argument('--wandb_log', action='store_true', default=False)
 
     
     return parser.parse_args()

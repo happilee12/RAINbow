@@ -4,7 +4,7 @@ MODEL_CKPOINTS_PATH=$BASEPATH/dataset/checkpoints
 
 ### Model Options
 ## Navigation
-nav_rainbow="--nav_resume_file ${MODEL_CKPOINTS_PATH}/nav_rainbow --nav_model DialogHistoryAgent --nav_prob_mode navigation --nav_act_visited_nodes"
+nav_rainbow="--nav_resume_file ${MODEL_CKPOINTS_PATH}/nav_rainbow --nav_model DialogHistoryAgent --nav_act_visited_nodes"
 nav_dialnav="--nav_resume_file ${MODEL_CKPOINTS_PATH}/nav_dialnav"
 ## Question
 q_rainbow="--qg_resume_file ${MODEL_CKPOINTS_PATH}/q_rainbow"
