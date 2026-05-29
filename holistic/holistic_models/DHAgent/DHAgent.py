@@ -146,7 +146,7 @@ class DialogHistoryAgent(Navigation, WTA):
 
     def get_next_action(self, nav_idx, obs):
         nav_inputs, pano_inputs = self.agent._process_navigation_step(obs, self.gmaps, self.ended, nav_idx, self.language_inputs, self.txt_embeds)
-        nav_probs, nav_vpids, nav_logits, nav_outs = self.agent._nav_probs(nav_inputs, mode='navigation_dialog_history')
+        nav_probs, nav_vpids, nav_logits, nav_outs = self.agent._nav_probs(nav_inputs)
         self.agent._update_stop_scores(nav_probs, self.gmaps, obs, self.ended)
 
         # decide next action. feedback = argmax
