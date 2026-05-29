@@ -293,7 +293,6 @@ def setAgents(args, target_envs, env_instructions, evaluator, scans):
         answer_model = LANA(args.basepath, {
             'scan_list': scans,
             'resume_file': args.ag_resume_file,
-            'eot_token': args.ag_eot_token,
             'connectivity_dir': args.connectivity_dir,
             'bpe_path': args.qa_clip_tokenizer_path,
             'max_action_len': args.ag_max_answer_seen_path,
@@ -362,9 +361,11 @@ def main():
     set_random_seed(args.seed + rank)
 
     tokenizer = get_tokenizer()
-    # env_instructions = load_instruction_data(args, target_envs, tokenizer)
     env_instructions = load_instruction_data_universal(args, target_envs, tokenizer)
-    # env_instructions['val_seen'] = env_instructions['val_seen'][:8]
+    if args.debug and 'val_seen' in env_instructions:
+        env_instructions['val_seen'] = env_instructions['val_seen'][:16]
+        print(f"Debug mode enabled: using first 16 samples from val_seen only.")
+        target_envs = ['val_seen']
 
     ## set up evaluator
     scans = list(set([item['scan'] for env_name in target_envs for item in env_instructions[env_name]]))
