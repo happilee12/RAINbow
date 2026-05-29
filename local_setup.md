@@ -1,5 +1,5 @@
 ### setup
-source .rainbow/bin/activate
+source ~/00_WorkDir/.rainbow/bin/activate
 export PYTHONPATH=/home/master/00_WorkDir/setup_pkg/Py310/build
 
 

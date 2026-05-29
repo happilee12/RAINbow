@@ -26,8 +26,6 @@ class LEDDataset(Dataset):
         self.texts = texts
         self.seq_lengths = seq_lengths
         self.dialogs = dialogs
-        # self.node_levels = None
-        # self.node_levels = json.load(open(args.image_dir + "allScans_Node2pix.json"))
         self.geodistance_nodes = json.load(open(self.args.geodistance_file))
         self.max_nodes = self.args.max_nodes
         if self.mode == "test" or self.mode == "valUnseen":

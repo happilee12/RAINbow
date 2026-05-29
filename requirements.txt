@@ -9,4 +9,6 @@ h5py==3.11.0
 numpy==1.23.5
 
 ftfy==6.1.1 # lana
-nltk==3.9.1
+nltk==3.9.1 # lana
+
+torch_geometric # GCN

@@ -7,10 +7,11 @@ __pycache__/
 *.pywz
 *.pyzw
 *.pyzwz
-local_script*.sh
 wandb/
 features/*
 paraphrase-en.gz
 dataset/*
 rainbow
-local_setup
+local_*.sh
+local_*.md
+output

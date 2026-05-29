@@ -21,7 +21,7 @@ class ImageFeaturesDB(object):
                 reader = csv.DictReader(tsv_in_file, delimiter='\t', fieldnames=tsv_fieldnames)
                 for item in reader:
                     long_id = item['scanId'] + "_" + item['viewpointId']
-                    self.clip16_fts[long_id] = np.frombuffer(base64.decodestring(item['features'].encode('ascii')),
+                    self.clip16_fts[long_id] = np.frombuffer(base64.b64decode(item['features'].encode('ascii')),
                                                     dtype=np.float32).reshape((36, -1))   # Feature of long_id is (36, 2048)
             print(f'loaded feature from {self.img_ft_file}')
 
