@@ -10,8 +10,8 @@ from models.graph_utils import GraphMap
 from models.vlnbert_init import get_tokenizer
 
 
-class DialogHistoryAgent(GMapNavAgnetWta):
-# class DialogHistoryAgent(GMapNavAgent):
+class DST(GMapNavAgnetWta):
+# class DST(GMapNavAgent):
     def __init__(self, args, env, rank=0):
         super().__init__(args, env, rank)
         self.tok = get_tokenizer(args)

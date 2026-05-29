@@ -13,7 +13,7 @@ import networkx as nx
 from collections import defaultdict
 import copy
 import MatterSim
-from dialog_history_agent.eval_utils import cal_dtw, cal_cls
+from dst.eval_utils import cal_dtw, cal_cls
 
 ERROR_MARGIN = 3.0
 

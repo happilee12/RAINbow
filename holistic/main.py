@@ -4,7 +4,7 @@ from holistic_utils.distributed import init_distributed, is_default_gpu
 from holistic_utils.misc import set_random_seed
 from holistic_utils.data_utils import construct_instrs, construct_instrs_universal
 from holistic_models.ScaleVLN.ScaleVLN import ScaleVLNModel
-from holistic_models.DHAgent.DHAgent import DialogHistoryAgent
+from holistic_models.DST.DST import DST
 from ModularNavigator import ModularNavigator
 from ModularGuide import ModularGuide
 from holistic_models.FixedInterval import FixedIntervalWtaModule
@@ -264,9 +264,9 @@ def setAgents(args, target_envs, env_instructions, evaluator, scans):
         navigation_model = ScaleVLNModel(args.basepath, navigation_model_args)
         navigation_model.eval()
         navigation_model.set_envs(target_envs, env_instructions)
-    elif args.nav_model == 'DialogHistoryAgent':
+    elif args.nav_model == 'DST':
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        modules_path = os.path.join(current_dir, '../../../modules/nav/DialogHistoryAgent/map_nav_src')
+        modules_path = os.path.join(current_dir, '../../../modules/nav/DST/map_nav_src')
         sys.path.insert(0, modules_path)
         navigation_model_args = {
             'batch_size': args.batch_size, 
@@ -275,7 +275,7 @@ def setAgents(args, target_envs, env_instructions, evaluator, scans):
             'act_visited_nodes': args.nav_act_visited_nodes,
             'question_weight': args.nav_wta_question_threshold,
         }
-        navigation_model = DialogHistoryAgent(args.basepath, navigation_model_args)
+        navigation_model = DST(args.basepath, navigation_model_args)
         navigation_model.eval()
         navigation_model.set_envs(target_envs, env_instructions)
     else:

@@ -16,13 +16,13 @@ from utils.distributed import init_distributed, is_default_gpu
 from utils.distributed import all_gather, merge_dist_results
 
 from utils.data import ImageFeaturesDB, ImageFeaturesDB2
-from dialog_history_agent.data_utils import construct_instrs
-from dialog_history_agent.env import NDHNavBatch
-from dialog_history_agent.parser import parse_args #아직 추가 안함
+from dst.data_utils import construct_instrs
+from dst.env import NDHNavBatch
+from dst.parser import parse_args #아직 추가 안함
 
 from models.vlnbert_init import get_tokenizer
-from dialog_history_agent.agent import GMapNavAgent
-from dialog_history_agent.dh_agent import DialogHistoryAgent
+from dst.agent import GMapNavAgent
+from dst.dst import DST
 
 import wandb
 import shutil
@@ -135,7 +135,7 @@ def train(args, train_env, val_envs, aug_env=None, train_env_inst=None, aug_trai
         record_file = os.path.join(args.log_dir, 'train.txt')
         write_to_record_file(str(args) + '\n\n', record_file)
 
-    agent_class = DialogHistoryAgent
+    agent_class = DST
     print("start training ... ")
     listner = agent_class(args, train_env, rank=rank)
 
@@ -366,7 +366,7 @@ def valid(args,  val_envs, rank=-1, instr_iter=0):
     print("start valid .. ")
     default_gpu = is_default_gpu(args)
 
-    agent_class = DialogHistoryAgent
+    agent_class = DST
     env_name = list(val_envs.keys())[0]
     agent = agent_class(args, val_envs[env_name], rank=rank)
 

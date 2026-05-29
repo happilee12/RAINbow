@@ -44,7 +44,7 @@ def parse_args():
     parser.add_argument('--ag_resume_file', type=str, default='')
     parser.add_argument('--loc_resume_file', type=str, default='')
     parser.add_argument('--wta_mode', type=str, default='navigation_model')
-    parser.add_argument('--nav_model', type=str, default='ScaleVLN', choices=['ScaleVLN', 'DialogHistoryAgent'])
+    parser.add_argument('--nav_model', type=str, default='ScaleVLN', choices=['ScaleVLN', 'DST'])
     parser.add_argument('--loc_model', type=str, default='GTL', choices=['GCN', 'GTL'])
     parser.add_argument('--nav_wta_question_threshold', type=float, default=0.5)
     parser.add_argument('--benchmark', type=str, default='dialnav') 

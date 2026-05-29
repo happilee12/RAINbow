@@ -7,15 +7,15 @@ import numpy as np
 import torch.nn.functional as F
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-modules_path = os.path.join(current_dir, '../../../modules/nav/DialogHistoryAgent/map_nav_src')
+modules_path = os.path.join(current_dir, '../../../modules/nav/DST/map_nav_src')
 sys.path.insert(0, modules_path)
 
 try:
-    from dialog_history_agent.dh_agent import DialogHistoryAgent as DHAgent
-    from dialog_history_agent.env import NDHNavBatch
+    from dst.dst import DST as NavDST
+    from dst.env import NDHNavBatch
     from .default_args import get_default_args
     from utils.data import ImageFeaturesDB
-    print("Successfully imported DialogHistoryAgent")
+    print("Successfully imported DST")
 except ImportError as e:
     print(f"Import error: {e}")
 
@@ -38,7 +38,7 @@ def merge_args(default_args, new_args):
     
     return Namespace(**merged_dict)
 
-class DialogHistoryAgent(Navigation, WTA):
+class DST(Navigation, WTA):
     def __init__(self, basepath, args=None, rank=0):
         from transformers import AutoTokenizer
         default_args = get_default_args(basepath)
@@ -46,7 +46,7 @@ class DialogHistoryAgent(Navigation, WTA):
         
         super().__init__(args)
         self.rank = rank
-        self.agent = DHAgent(args, None, rank)
+        self.agent = NavDST(args, None, rank)
         # self.agent = GMapNavAgent(args, None, rank)
         self.feat_db = ImageFeaturesDB(self.args.val_ft_file, self.args.image_feat_size)
         self.tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
