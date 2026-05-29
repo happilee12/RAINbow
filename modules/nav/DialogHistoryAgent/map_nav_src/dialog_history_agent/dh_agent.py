@@ -26,66 +26,6 @@ class DialogHistoryAgent(GMapNavAgnetWta):
                 ended[i] = True
 
         return a, ended
-    
-    # def init_graph_with_path_trajectory(self, obs):
-    #     historys = [ob['context'] for ob in obs]
-    #     scanIds = [ob['scan'] for ob in obs]
-    #     initial_headings = [3.141592653589793 for history in historys]
-    #     nav_historys = [history['nav_history'] for history in historys]
-    #     full_dialogs = [history['_full_dialog'] for history in historys]
-    #     nav_historys = [nav_history[-self.args.maximum_navigation_history_length:] for nav_history in nav_historys]
-    #     initial_viewpoints = [history[0] for history in nav_historys]
-    #     max_nav_history_len = max([len(nav_history) for nav_history in nav_historys])
-
-    #     self.env.env.newEpisodes(scanIds, initial_viewpoints, initial_headings)
-    #     obs = self.env._get_obs()
-    #     gmaps = [GraphMap(initial_viewpoints[i]) for i in range(len(obs))]
-        
-    #     traj_history = [{ 'instr_id': ob['instr_id'], 'path': [[ob['viewpoint']]] } for ob in obs]
-    #     ended = np.array([False] * len(obs))
-    #     steps = [0] * len(obs)
-
-    #     for t in range(max_nav_history_len-1):
-    #         self._update_graph_structure(obs, gmaps, ended)
-    #         pano_inputs = self._panorama_feature_variable(obs)
-    #         pano_embeds, pano_masks = self.vln_bert('panorama', pano_inputs)
-    #         avg_pano_embeds = torch.sum(pano_embeds * pano_masks.unsqueeze(2), 1) / \
-    #                           torch.sum(pano_masks, 1, keepdim=True)
-            
-    #         for i, gmap in enumerate(gmaps):
-    #             if ended[i]:
-    #                 continue
-
-    #             gmap.node_step_ids[obs[i]['viewpoint']] =  steps[i] + 1
-    #             steps[i] += 1
-
-    #             gmap.update_node_embed(obs[i]['viewpoint'], avg_pano_embeds[i], rewrite=True)
-    #             for j, i_cand_vp in enumerate(pano_inputs['cand_vpids'][i]):
-    #                 if not gmap.graph.visited(i_cand_vp):
-    #                     gmap.update_node_embed(i_cand_vp, pano_embeds[i, j])
-            
-    #         next_viewpoints, ended = self._get_next_action_with_ref_path(
-    #             obs, nav_historys, t, ended
-    #         )
-            
-    #         self.make_equiv_action(next_viewpoints, gmaps, obs, traj_history)
-    #         obs = self.env._get_obs()
-        
-    #     traj = [{
-    #             'instr_id': ob['instr_id'],
-    #             'path': [[ob['viewpoint']]],
-    #             'details': {},
-    #             'traj_history': traj_history[i]['path'],
-    #         } for i, ob in enumerate(obs)]
-        
-    #     # print("history length", [len(traj_history[i]['path']) for i in range(len(traj_history))])
-    #     return {
-    #         'gmaps': gmaps,
-    #         'traj': traj,
-    #         'obs': obs,
-    #         'steps': steps,
-    #     }
-    
 
     def _language_variable_add_answer(self, obs, answer_list, append_question=False, question_text_list = [], append_dialog_history=False, dialog_history=[]):
         instructions = [self.tok.encode(text)[1:] if text else [] for text in answer_list]
@@ -93,14 +33,6 @@ class DialogHistoryAgent(GMapNavAgnetWta):
             for i, text in enumerate(question_text_list):
                 if text:
                     instructions[i] = self.tok.encode(text)[1:] + instructions[i]
-
-        # if append_dialog_history:
-        #     for i, history in enumerate(dialog_history):
-        #         encoded_history_batch = []
-        #         for history_item in history:
-        #             encoded_history_batch += self.tok.encode(history_item["question"])[1:]
-        #             encoded_history_batch += self.tok.encode(history_item["answer"])[1:]
-        #         instructions[i]  = encoded_history_batch + instructions[i] 
 
         for i, ob in enumerate(obs):
             target_encoded = self.tok.encode(ob["target_only_instruction"])
@@ -200,19 +132,6 @@ class DialogHistoryAgent(GMapNavAgnetWta):
     
         return new_language_inputs, new_txt_embeds
 
-    # def _print_graph_structure(self, gmaps, obs):
-
-
-    #     for i, ob in enumerate(obs):
-    #         viewpoint = gmaps[i].node_positions.keys()
-    #         candidates = [c['viewpointId'] for c in ob['candidate']]
-    #         print(f"{i} : instr_id : {ob['instr_id']}, viewpoint : {ob['viewpoint']}, candidate : {len(candidates)} ({candidates})")
-    #         print(f"step : {gmaps[i].node_step_ids}")
-    #         print("-- graph: ", len(viewpoint), viewpoint)
-            
-    #     print()
-    #     print()
-
     def init_graph_with_full_dialog(self, obs):
         scanIds = [ob['scan'] for ob in obs]
         initial_headings = [3.14 for ob in obs]
@@ -286,7 +205,6 @@ class DialogHistoryAgent(GMapNavAgnetWta):
                 'traj_history': traj_history[i]['path'],
             } for i, ob in enumerate(obs)]
         
-        # print("history length", [len(traj_history[i]['path']) for i in range(len(traj_history))])
         return {
             'gmaps': gmaps,
             'traj': traj,
@@ -295,11 +213,6 @@ class DialogHistoryAgent(GMapNavAgnetWta):
         }
     
     def set_navigation_history(self, set_navigation_history=False):
-        # if set_navigation_history:
-        #     if use_dialog_history:
-        #         ret =  self.init_graph_with_full_dialog(self.env._get_obs())
-        #     else:
-        #         ret =  self.init_graph_with_path_trajectory(self.env._get_obs())
         if set_navigation_history:
             ret =  self.init_graph_with_full_dialog(self.env._get_obs())
         else:
@@ -322,8 +235,6 @@ class DialogHistoryAgent(GMapNavAgnetWta):
                 'steps': [0] * len(obs),
             }
 
-        # instr_encoding_list = [ob['instr_encoding'] for ob in ret['obs']]
-        # language_inputs = self._language_variable(instr_encoding_list)
         answer_list = [ob['a'] for ob in ret['obs']]
         language_inputs = self._language_variable_add_answer(ret['obs'], answer_list)
         txt_embeds = self.vln_bert('language', language_inputs)
@@ -351,10 +262,6 @@ class DialogHistoryAgent(GMapNavAgnetWta):
         else:
             raise ValueError(f"Invalid rollout type: {rollout_type}")
 
-    # instance rollout
-    # instance rollout without set_navigation_history => SV training
-    # instance rollout with set_navigation_history => SVND
-    # instance validation 
     def instance_rollout(self, train_ml=None, train_rl=False, reset=True, train_wta=False, set_navigation_history=False):
 
         torch.cuda.empty_cache()
@@ -385,29 +292,19 @@ class DialogHistoryAgent(GMapNavAgnetWta):
 
 
         ml_loss = 0.
-        wta_loss = 0.
-
-        # full_dialogs = [ob['dialog'] for ob in obs]
-        # dialog_maps = self._get_dialog_maps(full_dialogs, self.args.max_action_len)
-        # print("dialog_maps: ", dialog_maps)
 
         for nav_idx in range(self.args.max_action_len):
 
 
             if self.args.debug:
-                # print(f"rollout {nav_idx} language input", [self.tok.decode(language_inputs['txt_ids'][i]) for i in range(len(language_inputs['txt_ids']))])
                 print(f"[{nav_idx}], viewpoint: {[ob['viewpoint'] for ob in obs]}")
 
-            # print(f"[{nav_idx}], language_inputs decoded: {[self.tok.decode(language_inputs['txt_ids'][i]) for i in range(len(language_inputs['txt_ids']))]}")
             nav_inputs, pano_inputs = self._process_navigation_step(obs, gmaps, ended, nav_idx, language_inputs, txt_embeds, steps)
             nav_probs, nav_vpids, nav_logits, nav_outs = self._nav_probs(nav_inputs)
 
             gmap_embeds = nav_outs['gmap_embeds']
             gmap_vpids = nav_outs['gmap_vpids']
             for i, gmap in enumerate(gmaps):
-                # print("i", i)
-                # print("gmap_embeds[i]", gmap_embeds[i].shape)
-                # print("gmap_vpids[i]", len(gmap_vpids[i]), gmap_vpids[i])
                 gmap.update_history_embed(gmap_embeds[i], gmap_vpids[i])
 
             nav_targets = None
@@ -432,10 +329,6 @@ class DialogHistoryAgent(GMapNavAgnetWta):
                     # raise Exception("Loss is not finite")
                     # continue
 
-            # if train_ml and train_wta:
-            #     self.wta_loss_batch += self._teacher_forcing_wta(obs, nav_outs, nav_targets, traj)
-
-
             if self.args.debug:
                 print(f"rollout {nav_idx} nav_targets", nav_targets)
 
@@ -459,11 +352,6 @@ class DialogHistoryAgent(GMapNavAgnetWta):
             self.loss += ml_loss
             self.logs['IL_loss'].append(ml_loss.item())
         
-        # if train_ml and train_wta:
-        #     self.wta_loss += self.wta_loss_batch
-        #     self.wta_loss_batch = 0
-        #     self.logs['wta_loss'].append(self.wta_loss.item())
-
         return traj
     
     def episodic_rollout(self, train_ml=None, train_rl=False, reset=True, train_wta=False):
@@ -530,9 +418,6 @@ class DialogHistoryAgent(GMapNavAgnetWta):
             gmap_embeds = nav_outs['gmap_embeds']
             gmap_vpids = nav_outs['gmap_vpids']
             for i, gmap in enumerate(gmaps):
-                # print("i", i)
-                # print("gmap_embeds[i]", gmap_embeds[i].shape)
-                # print("gmap_vpids[i]", len(gmap_vpids[i]), gmap_vpids[i])
                 gmap.update_history_embed(gmap_embeds[i], gmap_vpids[i])
 
             nav_targets_for_action = None
@@ -603,12 +488,5 @@ class DialogHistoryAgent(GMapNavAgnetWta):
         if train_ml and train_wta:
             self.logs['wta_loss'].append(wta_loss.item())
             self.logs['wta_accuracy'].append(wta_match.mean())
-            # print("WTA loss", self.logs['wta_loss'])
-            # print("WTA accuracy", self.logs['wta_accuracy'])
-            
-            # self.wta_loss += self.wta_loss_batch
-            # self.wta_loss_batch = 0
-            # self.wta_accuracy = self.wta_accuracy / batch_size
-            # self.logs['wta_loss'].append(self.wta_loss.item())
 
         return traj

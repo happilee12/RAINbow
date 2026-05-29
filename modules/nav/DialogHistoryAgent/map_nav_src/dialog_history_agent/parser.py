@@ -127,13 +127,11 @@ def parse_args():
 
     ### debugs
     parser.add_argument('--disactivate_stop_node_jump', action='store_true', default=False)
-    # parser.add_argument('--expert_policy_weight', type=float, default=0.0)
     parser.add_argument('--episode_training_times', type=int, default=1)
     parser.add_argument('--aug_instance_training_times', type=int, default=1)
     parser.add_argument('--instance_training_times', type=int, default=0)
     parser.add_argument('--instance_training_set_history', action='store_true', default=False)
     parser.add_argument('--validation_set_history', action='store_true', default=False) # updated: v0.18
-    # parser.add_argument('--skip_model_save', action='store_true', default=False)
     parser.add_argument('--debug', action='store_true', default=False)
     parser.add_argument('--episodic_training_algorithm', type=str, default='imitation', choices=['imitation', 'imitation_shortest'])
     parser.add_argument('--aug_data_dir', type=str, default=None)
@@ -151,44 +149,6 @@ def parse_args():
 
 
 def postprocess_args(args):
-    ROOTDIR = args.root_dir
-
-    # Setup input paths
-    # ft_file_map = {
-    #     'clip.h14': 'clip_vit-h14_mp3d_hm3d_gibson.hdf5',
-    #     'clip.b16': 'clip_vit-b16_mp3d_hm3d_gibson.hdf5'
-    # }
-    
-    # args.aug_ft_file = os.path.join(ROOTDIR, 'R2R', 'features', ft_file_map[args.features])
-
-    # if args.features == 'clip.h14':
-    #     args.mp3d_ft_files = [os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_original.hdf5')]
-    #     args.val_ft_file = os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_original.hdf5')
-    # elif args.features == 'clip.b16':
-    #     args.mp3d_ft_files = [os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-b16_mp3d_original.hdf5')]
-    #     args.val_ft_file = os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-b16_mp3d_original.hdf5')
-
-    # if args.env_aug: # only h14
-    #     args.mp3d_ft_files = [
-    #         os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_img_image_synthesis.hdf5'), 
-    #         os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_img_mask_image_synthesis.hdf5'),
-    #         os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_img_style_transfer.hdf5'),
-    #         os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_original.hdf5'),
-    #         ]
-
-    # if args.aug:
-    #     args.connectivity_dir = os.path.join(ROOTDIR, 'R2R', 'connectivity')
-    # else:
-    #     args.connectivity_dir = os.path.join(ROOTDIR, 'R2R', 'connectivity_mp3d')
-
-    # args.scan_data_dir = os.path.join(ROOTDIR, 'Matterport3D', 'v1_unzip_scans')
-
-    # args.anno_dir = os.path.join(ROOTDIR, 'R2R', 'annotations')
-    # args.data_dir = os.path.join(ROOTDIR, 'CVDN', 'annotations', 'rain')
-    # args.data_dir = os.path.join(ROOTDIR, 'CVDN', 'annotations', 'ndh')
-    # args.data_dir = os.path.join(ROOTDIR, 'CVDN', 'annotations', 'rain-i')
-    # args.data_dir = os.path.join(ROOTDIR, 'CVDN', 'annotations', args.data_type)
-    
     # Build paths
     args.ckpt_dir = os.path.join(args.output_dir, 'ckpts')
     if args.zero_shot:
@@ -199,7 +159,6 @@ def postprocess_args(args):
 
     if not args.zero_shot:
         os.makedirs(args.output_dir, exist_ok=True)
-        # os.makedirs(args.output_dir, exist_ok=False)
         os.makedirs(args.ckpt_dir, exist_ok=True)
         os.makedirs(args.pred_dir, exist_ok=True)
     os.makedirs(args.log_dir, exist_ok=True)

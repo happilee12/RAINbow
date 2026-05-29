@@ -30,53 +30,6 @@ def load_instr_datasets(anno_dir, splits, debug=False):
         return data[:4]
     return data
 
-# def construct_instrs(anno_dir, dataset, splits, tokenizer, max_instr_len=512, is_test=True, append_q=False, append_history=False, maximum_navigation_history_length=None):
-#     data = []
-#     instr_encoding_lengths = []
-#     for item in load_instr_datasets(anno_dir, dataset, splits, tokenizer, is_test=is_test):
-#         item['path_id'] = f"{item['instr_id']}"
-#         ### instruction
-#         instruction = "target : "+item['target']
-#         target_only_instruction = "target : "+item['target']
-#         if 'a' in item:
-#             instruction = f"a: {item['a']} " + instruction
-#         if append_q and 'q' in item:
-#             instruction = f"q: {item['q']} " + instruction
-#         if append_history and item['_chat_idx'] > 1:
-#             dialog_history = ''
-#             for dialog in item['_full_dialog'][:item['_chat_idx']-1]:
-#                 dialog_history = dialog_history + f"q: {dialog['q']} a: {dialog['a']} "
-#             instruction = dialog_history + instruction
-#         instr_encoding = encode_bert(instruction)
-#         target_only_instr_encoding = encode_bert(target_only_instruction)
-#         instr_encoding_lengths.append(len(instr_encoding))
-#         item['instr_encoding'] = instr_encoding[-max_instr_len:]
-#         item['instruction'] = instruction
-#         item['target_only_instruction'] = target_only_instruction
-#         item['target_only_instr_encoding'] = target_only_instr_encoding
-
-
-#         # for training with dialog history
-#         if maximum_navigation_history_length is not None:
-#             if len(item['nav_history']) > maximum_navigation_history_length:
-#                 continue
-#         if '_full_dialog' in item and 'nav_history' in item:
-#             item['context'] = {
-#                 '_full_dialog': item['_full_dialog'],
-#                 'nav_history': item['nav_history'],
-#             }
-
-#         data.append(item)
-    
-#     metadata = {}
-#     metadata['count'] = len(data)
-#     metadata['sample'] = random.choice(data)
-#     metadata['instr_encoding_length_qurtile'] = np.percentile(instr_encoding_lengths, [25, 50, 75])
-#     instr_encoding_lengths = [len(item['instr_encoding']) for item in data]
-#     metadata['cut_instr_encoding_length_qurtile'] = np.percentile(instr_encoding_lengths, [25, 50, 75])
-
-#     return data, metadata
-
 
 def construct_instrs(anno_dir, splits, max_action_len=50, teacher_path='gt', instruction_prefix='target : ', debug=False):
     print()

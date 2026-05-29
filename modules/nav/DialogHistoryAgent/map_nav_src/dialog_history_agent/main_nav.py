@@ -326,21 +326,6 @@ def train(args, train_env, val_envs, aug_env=None, train_env_inst=None, aug_trai
 
                 # select model by gp
                 if env_name in best_val:
-                    # if args.extend_wta:
-                    #     listner.save(iter, os.path.join(args.ckpt_dir, "iter_%d" % (iter)))
-                    #     if 'wta_accuracy' in score_summary and score_summary['wta_accuracy'] >= best_val[env_name]['wta_accuracy']:
-                    #         best_val[env_name]['wta_accuracy'] = score_summary['wta_accuracy']
-                    #         listner.save(iter, os.path.join(args.ckpt_dir, "best_%s_wta" % (env_name)))
-                    # else:
-                    #     if score_summary['sr'] >= best_val[env_name]['sr']:
-                    #         best_val[env_name]['sr'] = score_summary['sr']
-                    #         best_val[env_name]['state_sr'] = 'Iter %d %s' % (iter, loss_str)
-                    #         listner.save(iter, os.path.join(args.ckpt_dir, "best_%s_sr" % (env_name)))
-                        
-                    #     # Calculate average SR
-                    #     if env_name in ['val_seen', 'val_unseen']:
-                    #         current_sr_sum += score_summary['sr']
-                    #         env_count += 1
                     if score_summary['sr'] >= best_val[env_name]['sr']:
                             best_val[env_name]['sr'] = score_summary['sr']
                             best_val[env_name]['state_sr'] = 'Iter %d %s' % (iter, loss_str)
@@ -360,14 +345,6 @@ def train(args, train_env, val_envs, aug_env=None, train_env_inst=None, aug_trai
                 best_val['val_avg']['state_sr'] = 'Iter %d %s' % (iter, loss_str)
                 listner.save(iter, os.path.join(args.ckpt_dir, "best_avg_sr"))
         
-        # # Save checkpoint every 10 log_every iterations
-        # # print("iter", iter, args.log_every, args.log_every * 20)
-        # if aug_env is not None and  iter % (args.log_every * 5) == 0:
-        #     # copy current best_avg_sr to best_avg_sr_iter_1000
-        #     shutil.copy(os.path.join(args.ckpt_dir, "best_avg_sr"), os.path.join(args.ckpt_dir, f"pt_best_avg_sr_until_{iter}"))
-        #     shutil.copy(os.path.join(args.ckpt_dir, "latest_dict"), os.path.join(args.ckpt_dir, f"pt_latest_dict_{iter}"))
-
-
         if default_gpu:
             # listner.save(idx, os.path.join(args.ckpt_dir, f"{idx}_dict"))
             listner.save(iter, os.path.join(args.ckpt_dir, "latest_dict"))
@@ -389,28 +366,10 @@ def valid(args,  val_envs, rank=-1, instr_iter=0):
     print("start valid .. ")
     default_gpu = is_default_gpu(args)
 
-
-
-    # if args.random_agent:
-    #     agent_class = RandomAgent
-    #     agent = agent_class(val_envs["val_seen"])
-
-    # elif args.extend_wta:
-    #     agent_class = GMapNavAgnetWta
-    #     agent = agent_class(args, val_envs["val_seen"], rank=rank)
-
-    # else:
-    #     agent_class = GMapNavAgent
-    #     agent = agent_class(args, val_envs["val_seen"], rank=rank)
-
     agent_class = DialogHistoryAgent
     env_name = list(val_envs.keys())[0]
     agent = agent_class(args, val_envs[env_name], rank=rank)
 
-    # if args.resume_file is not None:
-    #     print("Loaded the listener model at iter %d from %s" % (agent.load(args.resume_file), args.resume_file))
-
-        
     if default_gpu:
         with open(os.path.join(args.log_dir, 'validation_args.json'), 'w') as outf:
             json.dump(vars(args), outf, indent=4)
@@ -428,9 +387,6 @@ def valid(args,  val_envs, rank=-1, instr_iter=0):
     wandb_log = {}
     for env_name, env in val_envs.items():
         print("env_name", env_name)
-        # if os.path.exists(os.path.join(args.pred_dir, "submit_%s.json" % env_name)):
-        #     print("file already exists", os.path.join(args.pred_dir, "submit_%s.json" % env_name))
-        #     continue
         agent.logs = defaultdict(list)
         agent.env = env
 
