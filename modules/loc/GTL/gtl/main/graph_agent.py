@@ -20,9 +20,9 @@ from torch.nn.utils.rnn import pad_sequence
 from .agent_base import Seq2SeqAgent
 # from .eval_utils import cal_dtw
 
-from duetLoc.models.graph_utils_for_loc import GraphMap
-from duetLoc.models.model import VLNBert, Critic
-from duetLoc.models.ops import pad_tensors_wgrad
+from gtl.models.graph_utils_for_loc import GraphMap
+from gtl.models.model import VLNBert, Critic
+from gtl.models.ops import pad_tensors_wgrad
 
 
 class GraphVlnAgent(Seq2SeqAgent):

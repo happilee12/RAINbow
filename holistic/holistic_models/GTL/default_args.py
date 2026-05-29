@@ -43,7 +43,7 @@ def get_default_args(basepath):
         max_action_len=15,
         max_instr_len=200,
         ml_weight=0.15,
-        model_save_path='/DuetLoc/debug',
+        model_save_path='/GTL/debug',
         num_l_layers=9,
         num_pano_layers=2,
         num_x_layers=4,
@@ -55,9 +55,9 @@ def get_default_args(basepath):
         tokenizer='bert',
         train=True,
         train_alg='dagger',
-        train_data_path=f'{basepath}/modules/loc/DuetLoc/way_splits/train_data.json',
-        valseen_data_path=f'{basepath}/modules/loc/DuetLoc/way_splits/valSeen_data.json',
-        valunseen_data_path=f'{basepath}/modules/loc/DuetLoc/way_splits/valUnseen_data.json',
+        train_data_path=f'{basepath}/modules/loc/GTL/way_splits/train_data.json',
+        valseen_data_path=f'{basepath}/modules/loc/GTL/way_splits/valSeen_data.json',
+        valunseen_data_path=f'{basepath}/modules/loc/GTL/way_splits/valUnseen_data.json',
         wandb_log=False,
         world_size=1
     )

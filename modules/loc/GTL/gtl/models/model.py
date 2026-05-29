@@ -7,7 +7,7 @@ import torch.nn as nn
 
 # from transformers import BertPreTrainedModel
 
-from duetLoc.models.vlnbert_init import get_vlnbert_models
+from gtl.models.vlnbert_init import get_vlnbert_models
 
 class VLNBert(nn.Module):
     def __init__(self, args):

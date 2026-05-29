@@ -12,7 +12,7 @@ from holistic_models.ConfidenceThresholding import ConfidenceThresholdingWtaModu
 from holistic_models.FixedResponse import FixedAnswerGeneration, FixedQuestionGeneration
 from holistic_models.LANA.LANA import LANA
 from holistic_models.GCNLoc.GCNLoc import GCNLocModel
-from holistic_models.DuetLoc.DuetLoc import GraphVlnAgentModel
+from holistic_models.GTL.GTL import GraphVlnAgentModel
 import time
 import numpy as np
 from evaluator import Evaluator
@@ -315,7 +315,7 @@ def setAgents(args, target_envs, env_instructions, evaluator, scans):
                     'embedding_dir': args.loc_embedding_dir,
                     'bert_enc': args.loc_bert_enc,
                 })
-            elif args.loc_model == 'DuetLoc':
+            elif args.loc_model == 'GTL':
                 localization_model = GraphVlnAgentModel(args.basepath, {
                     'resume_file': args.loc_resume_file,
                     'scan_list': scans,

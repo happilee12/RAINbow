@@ -432,7 +432,7 @@ def main():
         wandb.init(
             project=args.wandb_project,
             config=args,
-            group="duetloc",
+            group="gtl",
             id=args.id, 
         )
         logger.info("Wandb logging enabled")

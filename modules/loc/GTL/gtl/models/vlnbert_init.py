@@ -11,7 +11,7 @@ def get_vlnbert_models(args, config=None):
     print("get_vlnbert_models for localization")
     
     from transformers import PretrainedConfig
-    from duetLoc.models.vilmodel import GlocalTextPathNavCMT
+    from gtl.models.vilmodel import GlocalTextPathNavCMT
     
     model_name_or_path = args.bert_ckpt_file
     new_ckpt_weights = {}

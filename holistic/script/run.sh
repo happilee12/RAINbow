@@ -15,7 +15,7 @@ a_dialnav="--ag_resume_file ${MODEL_CKPOINTS_PATH}/a_dialnav"
 ## WTA
 wta="--wta_mode ct_0.9"
 ## Localization
-loc_rainbow="--loc_resume_file ${MODEL_CKPOINTS_PATH}/loc_rainbow.pth --loc_model DuetLoc"
+loc_rainbow="--loc_resume_file ${MODEL_CKPOINTS_PATH}/loc_rainbow.pth --loc_model GTL"
 loc_dialnav="--loc_resume_file ${MODEL_CKPOINTS_PATH}/loc_dialnav.pt --loc_model GCN --loc_node_feats_dir ${BASEPATH}/dataset/modules/node_feats/ --loc_geodistance_nodes_path ${BASEPATH}/dataset/modules/localization/geodistance_nodes.json --loc_embedding_dir ${BASEPATH}/dataset/modules/localization/word_embeddings/"
 
 

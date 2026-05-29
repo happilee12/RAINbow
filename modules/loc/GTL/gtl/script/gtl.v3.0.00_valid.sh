@@ -60,7 +60,7 @@ flag="--root_dir ${DATA_ROOT}
       
       --gamma 0."
 
-id=duetloc.v3.0.00_valid
+id=gtl.v3.0.00_valid
 basepath=/home/master/00_WorkDir/05_DialNavPublic/DialNavHolistic
 output_path=/home/master/00_WorkDir/DialNav2_outputs
 CUDA_VISIBLE_DEVICES=0 python3 main/main_nav.py $flag  \
@@ -71,13 +71,13 @@ CUDA_VISIBLE_DEVICES=0 python3 main/main_nav.py $flag  \
       --train_data_path ${basepath}/dataset/rain_dataset/01_rain/train_inst.json \
       --valseen_data_path ${basepath}/dataset/rain_dataset/01_rain/val_seen.json \
       --valunseen_data_path ${basepath}/dataset/rain_dataset/01_rain/val_unseen.json \
-      --model_save_path ${output_path}/DuetLoc/${id} \
+      --model_save_path ${output_path}/GTL/${id} \
       --id ${id} \
       --wandb_project Rainbow_Loc_validation \
       --wandb_name ${id} \
       --wandb_log \
       --eval_first \
-      --resume_file /home/master/00_WorkDir/data/02_pt/duetLoc.v3.0.02_pt/best_avg_LE.pth \
+      --resume_file /home/master/00_WorkDir/data/02_pt/GTL.v3.0.02_pt/best_avg_LE.pth \
       # --bert_ckpt_file ${basepath}/checkpoints/base/duet_vit-h14_model_step_190000.pt \
       # --debug \
     #   --eval_first \

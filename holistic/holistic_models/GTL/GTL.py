@@ -2,17 +2,17 @@ import sys
 import os
 from argparse import Namespace
 current_dir = os.path.dirname(os.path.abspath(__file__))
-modules_path = os.path.join(current_dir, '../../../modules/loc/DuetLoc')
+modules_path = os.path.join(current_dir, '../../../modules/loc/GTL')
 sys.path.insert(0, modules_path)
 
 from interface.Localization import Localization
 from .default_args import get_default_args
 
 try:
-    from duetLoc.main.graph_agent import GraphVlnAgent
-    from duetLoc.utils.data import ImageFeaturesDB
-    from duetLoc.main.env import GraphEnvBatch
-    # from duetLoc.main.main_nav import build_env
+    from gtl.main.graph_agent import GraphVlnAgent
+    from gtl.utils.data import ImageFeaturesDB
+    from gtl.main.env import GraphEnvBatch
+    # from gtl.main.main_nav import build_env
     print("Successfully imported GraphVlnAgent")
 except ImportError as e:
     print(f"Import error: {e}")

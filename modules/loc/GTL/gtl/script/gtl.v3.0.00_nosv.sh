@@ -60,7 +60,7 @@ flag="--root_dir ${DATA_ROOT}
       
       --gamma 0."
 
-id=duetloc.v3.0.00_nosv
+id=gtl.v3.0.00_nosv
 basepath=/home/master/00_WorkDir/05_DialNavPublic/DialNavHolistic
 output_path=/home/master/00_WorkDir/DialNav2_outputs
 CUDA_VISIBLE_DEVICES=0 python3 main/main_nav.py $flag  \
@@ -71,7 +71,7 @@ CUDA_VISIBLE_DEVICES=0 python3 main/main_nav.py $flag  \
       --train_data_path ${basepath}/dataset/rain_dataset/01_rain/train_inst.json \
       --valseen_data_path ${basepath}/dataset/rain_dataset/01_rain/val_seen.json \
       --valunseen_data_path ${basepath}/dataset/rain_dataset/01_rain/val_unseen.json \
-      --model_save_path ${output_path}/DuetLoc/${id} \
+      --model_save_path ${output_path}/GTL/${id} \
       --id ${id} \
       --wandb_project debug \
       --wandb_name ${id} \
@@ -85,7 +85,7 @@ CUDA_VISIBLE_DEVICES=0 python3 main/main_nav.py $flag  \
       # --debug \
     #   --eval_first \
 
-id=duetloc.v3.0.00_sv
+id=gtl.v3.0.00_sv
 basepath=/home/master/00_WorkDir/05_DialNavPublic/DialNavHolistic
 output_path=/home/master/00_WorkDir/DialNav2_outputs
 CUDA_VISIBLE_DEVICES=0 python3 main/main_nav.py $flag  \
@@ -96,7 +96,7 @@ CUDA_VISIBLE_DEVICES=0 python3 main/main_nav.py $flag  \
       --train_data_path ${basepath}/dataset/rain_dataset/01_rain/train_inst.json \
       --valseen_data_path ${basepath}/dataset/rain_dataset/01_rain/val_seen.json \
       --valunseen_data_path ${basepath}/dataset/rain_dataset/01_rain/val_unseen.json \
-      --model_save_path ${output_path}/DuetLoc/${id} \
+      --model_save_path ${output_path}/GTL/${id} \
       --id ${id} \
       --wandb_project debug \
       --wandb_name ${id} \
@@ -109,4 +109,3 @@ CUDA_VISIBLE_DEVICES=0 python3 main/main_nav.py $flag  \
       --bert_ckpt_file ${basepath}/checkpoints/base/duet_vit-h14_model_step_190000.pt \
       # --debug \
     #   --eval_first \
-
