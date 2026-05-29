@@ -7,7 +7,6 @@ mp3d_ft_files=$basepath/dataset/features/clip_vit-h14_mp3d_original.hdf5
 val_ft_file=$basepath/dataset/features/clip_vit-h14_mp3d_original.hdf5
 connectivity=$basepath/dataset/connectivity
 
-
 features=clip.h14
 ft_dim=1024
 obj_features=vitbase
@@ -64,7 +63,6 @@ CUDA_VISIBLE_DEVICES=0 python3 -m dst.main_nav $flag  \
       --data_dir $data_dir \
       --max_action_len 50 \
       --eval_first \
-      --instance_training_set_history \
       --validation_set_history \
       --disactivate_stop_node_jump \
       --act_visited_nodes \
@@ -76,7 +74,6 @@ CUDA_VISIBLE_DEVICES=0 python3 -m dst.main_nav $flag  \
       --aug_data_dir $aug_data_dir \
       --aug \
       --aug_instance_training_times 9 \
-      --aug_episodic_training_times 9 \
-      --episodic_training_times 1 \
       --instance_training_times 1 \
       --seed 3 \
+      # --instance_training_set_history \

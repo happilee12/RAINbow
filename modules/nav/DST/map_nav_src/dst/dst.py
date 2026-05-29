@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-from .agent import GMapNavAgnetWta, GMapNavAgent
+from dst.agent import GMapNavAgnetWta, GMapNavAgent
 
 from models.graph_utils import GraphMap
 from models.vlnbert_init import get_tokenizer

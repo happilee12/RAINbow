@@ -24,7 +24,7 @@ from models.vlnbert_init import get_tokenizer
 from dst.agent import GMapNavAgent
 from dst.dst import DST
 
-import wandb
+# import wandb
 import shutil
 
 def build_dataset(args, rank=0, val_only=False, aug=False, except_train_seen=False, is_test=False, record_file=None):
