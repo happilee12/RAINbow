@@ -7,6 +7,10 @@ conda create --name dialnav python=3.10
 conda activate dialnav
 pip install -r requirements.txt
 
+# for lana
+apt-get update && apt-get install -y openjdk-17-jre-headless
+
+
 3. download dataset from here #TODO and put it under <directory>/dataset
 it should look like
 directory

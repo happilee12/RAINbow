@@ -1,16 +1,11 @@
 import torch
 from lana_models.tokenization_clip import SimpleTokenizer
-from transformers import T5Tokenizer
 
 def get_tokenizer(args):
     from transformers import AutoTokenizer
-    # if args.dataset == 'rxr' or args.tokenizer == 'xlm':
-    #     cfg_name = 'xlm-roberta-base'
-    # else:
-    #     cfg_name = 'bert-base-uncased'
-        
+
     if args.use_clip16:
-        tokenizer = SimpleTokenizer()
+        tokenizer = SimpleTokenizer(args.bpe_path)
     else:
         cfg_name = 'bert-base-uncased'
         tokenizer = AutoTokenizer.from_pretrained(cfg_name)
@@ -43,17 +38,7 @@ def get_vlnbert_models(args, config=None):
                         k = 'bert.' + k
                     new_ckpt_weights[k] = v
     
-    # if args.dataset == 'rxr' or args.tokenizer == 'xlm':
-    #     cfg_name = 'xlm-roberta-base'
-    # else:
-    #     cfg_name = 'bert-base-uncased'
-    
-    # vis_config = PretrainedConfig.from_pretrained(cfg_name)     
 
-    # offline mode ==================================== #
-    # cfg_name = open('bert-base-uncased.json')
-    # import json
-    # cfg = json.load(cfg_name)
     cfg = {
     "architectures": [
       "BertForMaskedLM"

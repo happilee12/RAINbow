@@ -914,118 +914,6 @@ class Seq2SeqCMTAgent(BaseAgent):
             diagonal=1,
         )
 
-    # def get_history_and_actions_bu(self, obs):
-    #     use_cache = self.args.use_cache
-    #     add_eot = self.args.eot_token
-
-    #     print("Current cache size", len(self.action_cache))
-
-    #     cached = [ob['cache_key'] in self.action_cache for ob in obs]
-
-    #     if use_cache and all(cached):
-    #         None
-    #     else:
-    #         print("CACHE MISS!!!!!!!!!!!!!!", cached)
-    #         print([ob['cache_key'] for ob in obs])
-    #         batch_size = len(obs)
-    #         # hist_lens = [1 for _ in range(batch_size)]                                                  # [b]
-    #         hist_lens = torch.ones(batch_size, dtype=torch.long).cuda()  # [b]
-    #         # action_lens = [0 for _ in range(batch_size)]
-    #         action_lens = torch.zeros(batch_size, dtype=torch.long).cuda()  # [b]
-
-
-    #         hist_pano_img = []
-    #         hist_pano_ang = []
-    #         hist_img = []
-    #         prev_act = []
-
-    #         traj = [{
-    #             'instr_id': ob['instr_id'],
-    #             'path': [(ob['viewpoint'], ob['heading'], ob['elevation'])],
-    #         } for ob in obs]
-    #         ended = np.array([False] * batch_size)
-    #         for t in range(self.args.max_action_len):  
-    #             if self.args.ob_type == 'pano':
-    #                 ob_img_feats, ob_ang_feats, ob_nav_types, ob_lens, ob_cand_lens, ob_pos = self._cand_pano_feature_variable(obs)
-    #                 ob_masks = length2mask(ob_lens).logical_not()
-
-    #             elif self.args.ob_type == 'cand':
-    #                 ob_img_feats, ob_ang_feats, ob_nav_types, ob_cand_lens = self._candidate_variable(obs)
-    #                 ob_masks = length2mask(ob_cand_lens).logical_not()
-
-    #             # time.sleep(1)
-    #             # print_memory_usage("after "+ str(t)+" th action")
-
-    #             target = self._teacher_action(obs, ended, 0)
-    #             a_t = target
-
-    #             cpu_a_t = a_t.cpu().numpy()
-    #             for i, next_id in enumerate(cpu_a_t):
-    #                 if next_id == (ob_cand_lens[i]-1) or next_id == self.args.ignoreid or ended[i]:    # The last action is <end>
-    #                     cpu_a_t[i] = -1             # Change the <end> and ignore action to -1
-
-    #             # if ((not np.logical_or(ended, (cpu_a_t == -1)).all()) and (t != self.args.max_action_len-1)):
-    #             # DDP error: RuntimeError: Expected to mark a variable ready only once.
-    #             # It seems that every output from DDP should be used in order to perform correctly
-    #             hist_img_feats, hist_pano_img_feats, hist_pano_ang_feats = self._history_variable(obs)
-    #             prev_act_angle = np.zeros((batch_size, self.args.angle_feat_size), np.float32)
-    #             for i, next_id in enumerate(cpu_a_t):
-    #                 if next_id != -1:
-    #                     prev_act_angle[i] = obs[i]['candidate'][next_id]['feature'][-self.args.angle_feat_size:]
-    #             prev_act_angle = torch.from_numpy(prev_act_angle).cuda()
-
-    #             hist_pano_img.append(hist_pano_img_feats) # [b,d] => [t, b, d]
-    #             hist_pano_ang.append(hist_pano_ang_feats) # [b,d]
-    #             hist_img.append(hist_img_feats)
-    #             prev_act.append(prev_act_angle)
-
-    #             for i, i_ended in enumerate(ended):
-    #                 if not i_ended:
-    #                     hist_lens[i] += 1
-    #                     action_lens[i] += 1
-    #             self.make_equiv_action(cpu_a_t, obs, 0, traj)
-    #             obs = self.env._get_obs(t=t+1)
-                
-    #             ended[:] = np.logical_or(ended, (cpu_a_t == -1))
-                
-    #             # print_memory_usage("after "+ str(t)+" th action features")
-            
-                        
-    #         # Add EOT token if add_eot is True and trajectory ended early
-    #         if self.args.debug:
-    #             print("add_eot", add_eot, "instr_ids", [(ob['instr_id'], ob['gt_path'], ended[i]) for i, ob in 
-    #             enumerate(obs)])
-    #             print()
-    #             print()
-
-                
-    #         if add_eot:
-    #             for idx, ob in enumerate(obs):
-    #                 if ended[idx]: 
-    #                     hist_pano_img.append(torch.zeros_like(hist_pano_img_feats).cuda())
-    #                     hist_pano_ang.append(torch.zeros_like(hist_pano_ang_feats).cuda())
-    #                     hist_img.append(torch.zeros_like(hist_img_feats).cuda())
-    #                     prev_act.append(torch.zeros_like(prev_act_angle).cuda())
-    #                     hist_lens[idx] += 1
-    #                     action_lens[idx] += 1
-
-    #         hist_pano_img_tensor = torch.stack(hist_pano_img, dim=0)
-    #         hist_pano_img_tensor = hist_pano_img_tensor.permute(1, 0, 2, 3)  
-    #         hist_pano_ang_tensor = torch.stack(hist_pano_ang, dim=0).permute(1, 0, 2, 3)  
-    #         hist_img_tensor = torch.stack(hist_img, dim=0).permute(1, 0, 2)  
-    #         prev_act_tensor = torch.stack(prev_act, dim=0).permute(1, 0, 2)  
-
-    #         for idx, ob in enumerate(obs):
-    #             cache_key = ob['cache_key']
-    #             self.action_cache[cache_key] = {
-    #                 'hist_pano_img_tensor': hist_pano_img_tensor[idx],
-    #                 'hist_pano_ang_tensor': hist_pano_ang_tensor[idx],
-    #                 'hist_img_tensor': hist_img_tensor[idx],
-    #                 'prev_act_tensor': prev_act_tensor[idx],
-    #                 'hist_len': hist_lens[idx],
-    #                 'action_len': action_lens[idx]
-    #             }
-
     def load_cache_keys(self):
         cache_dir = self.args.cache_dir
         if not os.path.exists(cache_dir):
@@ -1090,7 +978,7 @@ class Seq2SeqCMTAgent(BaseAgent):
         else:
             if use_cache:
                 cache_size = len(self.cache_keys) if cache_type == 'disk' else len(self.action_cache)
-                print(f"use_cache {use_cache} hits {sum(cache_hits)/len(cache_hits)} .. cache size {cache_size}")
+                # print(f"use_cache {use_cache} hits {sum(cache_hits)/len(cache_hits)} .. cache size {cache_size}")
 
             batch_size = len(obs)
             hist_lens = torch.ones(batch_size, dtype=torch.long).cuda()
