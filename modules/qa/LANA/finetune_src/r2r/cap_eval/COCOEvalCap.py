@@ -12,12 +12,9 @@ from .tokenizer.ptbtokenizer import PTBTokenizer
 
 class COCOEvalCap(object):
     def __init__(self, val_instr_data):
-    # def __init__(self, splits, tok, val_instr_data, use_clip16=False):
         self.evalImgs = []
         self.eval = {}
-        # self.splits = splits
         self.gts = defaultdict(list)
-        # self.use_clip16 = use_clip16
         for item in val_instr_data:
             self.gts[str(item['path_id'])].append(item['instruction'])
 
@@ -51,23 +48,9 @@ class COCOEvalCap(object):
             if type(method) == list:
                 for sc, scs, m in zip(score, scores, method):
                     self.setEval(sc, m)
-                    # self.setImgToEvalImgs(scs, gts.keys(), m)
-                    # print("%s: %0.3f"%(m, sc))
             else:
                 self.setEval(score, method)
-                # self.setImgToEvalImgs(scores, gts.keys(), method)
-                # print("%s: %0.3f"%(method, score))
-        #self.setEvalImgs()
 
     def setEval(self, score, method):
         self.eval[method] = score
 
-    # def setImgToEvalImgs(self, scores, imgIds, method):
-    #     for imgId, score in zip(imgIds, scores):
-    #         if not imgId in self.imgToEval:
-    #             self.imgToEval[imgId] = {}
-    #             self.imgToEval[imgId]["image_id"] = imgId
-    #         self.imgToEval[imgId][method] = score
-
-    # def setEvalImgs(self):
-    #     self.evalImgs = [eval for imgId, eval in self.imgToEval.items()]
