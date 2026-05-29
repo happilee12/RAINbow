@@ -3,14 +3,14 @@ feedback=sample
 ft_dim=512
 ngpus=1
 
-basepath=/home/master/00_WorkDir/05_DialNavPublic/DialNavHolistic
-output_path=/home/master/00_WorkDir/06_RAINbow/output/q_lana
+basepath=YOUR_BASE_PATH
+output_path=YOUR_OUTPUT_PATH
 connectivity_dir=${basepath}/dataset/connectivity/
 img_ft_file=${basepath}/dataset/features/CLIP-ViT-B-16-views.tsv
 bpe_path=${basepath}/dataset/modules/clip_tokenizer/bpe_simple_vocab_16e6.txt.gz
 anno_dir=${basepath}/dataset/rain_dataset/01_rain
 aug_data_dir=${basepath}/dataset/rainbow/v3.1
-resume_file=/home/master/00_WorkDir/06_RAINbow/dataset/pretrained/lana-caption-pretrain-max200
+resume_file=${basepath}/dataset/pretrained/lana-caption-pretrain-max200
 
 id=debug
 

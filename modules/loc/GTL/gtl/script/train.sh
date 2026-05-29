@@ -1,8 +1,8 @@
-basepath=/home/master/00_WorkDir/05_DialNavPublic/DialNavHolistic
-output_path=/home/master/00_WorkDir/06_RAINbow/output/loc_gtl
+basepath=YOUR_BASE_PATH
+output_path=YOUR_OUTPUT_PATH
 data_dir=$basepath/dataset/rain_dataset/01_rain
 aug_data_dir=$basepath/dataset/rainbow/v3.1
-bert_ckpt_file=/home/master/00_WorkDir/06_RAINbow/dataset/pretrained/duet_vit-h14_model_step_190000.pt   
+bert_ckpt_file=$basepath/dataset/pretrained/duet_vit-h14_model_step_190000.pt   
 mp3d_ft_files=$basepath/dataset/features/clip_vit-h14_mp3d_original.hdf5
 connectivity=$basepath/dataset/connectivity
 
@@ -90,5 +90,3 @@ CUDA_VISIBLE_DEVICES=0 python3 main/main_nav.py $flag  \
       --preload_features \
       --aug_data_paths $aug_data_dir/aug_train_inst.jsonl \
       --bert_ckpt_file $bert_ckpt_file \
-      # --debug \
-    #   --eval_first \

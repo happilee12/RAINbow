@@ -1,8 +1,8 @@
-basepath=/home/master/00_WorkDir/05_DialNavPublic/DialNavHolistic
-output_path=/home/master/00_WorkDir/06_RAINbow/output/nav_dialnav
+basepath=YOUR_BASE_PATH
+output_path=YOUR_OUTPUT_PATH
 data_dir=$basepath/dataset/rain_dataset/01_rain
 aug_data_dir=$basepath/dataset/rainbow/v3.1
-bert_ckpt_file=/home/master/00_WorkDir/06_RAINbow/dataset/pretrained/duet_vit-h14_model_step_190000.pt   
+bert_ckpt_file=$basepath/dataset/pretrained/duet_vit-h14_model_step_190000.pt   
 mp3d_ft_files=$basepath/dataset/features/clip_vit-h14_mp3d_original.hdf5
 val_ft_file=$basepath/dataset/features/clip_vit-h14_mp3d_original.hdf5
 connectivity=$basepath/dataset/connectivity
@@ -76,4 +76,3 @@ CUDA_VISIBLE_DEVICES=0 python3 -m dst.main_nav $flag  \
       --aug_instance_training_times 9 \
       --instance_training_times 1 \
       --seed 3 \
-      # --instance_training_set_history \
