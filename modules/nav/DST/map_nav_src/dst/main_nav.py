@@ -18,14 +18,12 @@ from utils.distributed import all_gather, merge_dist_results
 from utils.data import ImageFeaturesDB, ImageFeaturesDB2
 from dst.data_utils import construct_instrs
 from dst.env import NDHNavBatch
-from dst.parser import parse_args #아직 추가 안함
+from dst.parser import parse_args 
 
 from models.vlnbert_init import get_tokenizer
-from dst.agent import GMapNavAgent
 from dst.dst import DST
 
 # import wandb
-import shutil
 
 def build_dataset(args, rank=0, val_only=False, aug=False, except_train_seen=False, is_test=False, record_file=None):
     tok = get_tokenizer(args)

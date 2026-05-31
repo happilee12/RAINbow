@@ -64,15 +64,12 @@ CUDA_VISIBLE_DEVICES=0 python3 -m dst.main_nav $flag  \
       --max_action_len 50 \
       --eval_first \
       --validation_set_history \
-      --disactivate_stop_node_jump \
-      --act_visited_nodes \
       --iters 100000 \
       --batch_size 4 \
       --grad_accum_steps 16 \
       --log_every 100 \
       --lr 1e-4 \
-      --aug_data_dir $aug_data_dir \
-      --aug \
-      --aug_instance_training_times 9 \
       --instance_training_times 1 \
       --seed 3 \
+      --act_visited_nodes \
+      # --disactivate_stop_node_jump \
