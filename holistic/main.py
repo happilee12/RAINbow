@@ -236,6 +236,37 @@ def run(navigator, guide, max_action_len, mode, env_name, output_file, benchmark
 
     
     return output
+
+
+def flatten_path(path):
+    flat_path = []
+    for step in path:
+        if isinstance(step, list):
+            flat_path.extend(flatten_path(step))
+        else:
+            flat_path.append(step)
+    return flat_path
+
+
+def make_submit_output(output):
+    submit_output = []
+    for item in output:
+        submit_item = {k: v for k, v in item.items() if k != 'navigation_detail'}
+        submit_item['path'] = flatten_path(item.get('path', []))
+
+        dialog = []
+        for detail in item.get('navigation_detail', []):
+            if detail.get('ask'):
+                dialog.append({
+                    'nav_idx': detail.get('nav_idx'),
+                    'question': detail.get('question'),
+                    'answer': detail.get('answer'),
+                    'localized_viewpoint': detail.get('localized_viewpoint'),
+                })
+        submit_item['dialog'] = dialog
+        submit_output.append(submit_item)
+
+    return submit_output
             
 def setWta(wta_mode, navigation_model=None):
     if wta_mode.startswith('every'):
@@ -416,6 +447,10 @@ def main():
         ## save output to json
         with open(f"{args.output_path}/{env_name}.json", "w") as f:
             json.dump(output, f, default=lambda x: x.item() if isinstance(x, (bool, np.bool_)) else x)
+
+        submit_output = make_submit_output(output)
+        with open(f"{args.output_path}/{env_name}_for_submit.json", "w") as f:
+            json.dump(submit_output, f, default=lambda x: x.item() if isinstance(x, (bool, np.bool_)) else x)
 
         avg_metrics, metrics = evaluator.eval_metrics(output)
         metrics_acc[env_name] = metrics

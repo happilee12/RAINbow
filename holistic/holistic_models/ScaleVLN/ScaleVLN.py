@@ -17,7 +17,7 @@ try:
     from sv_utils.data import ImageFeaturesDB
     from nav_agent.env import NDHNavBatch
     from .default_args import get_default_args
-    print("Successfully imported nav_agent")
+    print("Successfully imported ScaleVLN")
 except ImportError as e:
     print(f"Import error: {e}")
 
@@ -44,8 +44,10 @@ class ScaleVLNModel(Navigation, WTA):
     def __init__(self, basepath, args=None, rank=0):
         from transformers import AutoTokenizer
         default_args = get_default_args(basepath)
+        print("args", args)
         args = merge_args(default_args, args)
         
+        print("args", args)
         super().__init__(args)
         self.rank = rank
         self.agent = GMapNavAgnetWta(args, None, rank)
