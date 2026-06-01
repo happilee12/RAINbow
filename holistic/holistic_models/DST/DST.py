@@ -173,30 +173,23 @@ class DST(Navigation, WTA):
         new_instructions = []
         new_instructions_encoded = []
         for i, ob in enumerate(obs):
-            if append_behind: # for R2R, RxR test
-                new_instructions.append(f"{ob['instruction']} {answers[i]}")
-            else:
-                new_instructions.append(f"{answers[i]} {ob['instruction']}")
             target_encoded = self.tokenizer.encode(ob["instruction"])
             answer_encoded = self.tokenizer.encode(answers[i])
-            new_instructions_encoded.append(answer_encoded + target_encoded[1:])
+            if append_behind: # for R2R, RxR test
+                new_instructions.append(f"{ob['instruction']} {answers[i]}")
+                new_instructions_encoded.append(target_encoded + answer_encoded[1:])
+            else:
+                new_instructions.append(f"{answers[i]} {ob['instruction']}")
+                new_instructions_encoded.append(answer_encoded + target_encoded[1:])
 
         for i in to_ask_indices:
             self.instruction[i] = new_instructions[i]
             self.instruction_encoded[i] = new_instructions_encoded[i]
 
-        # print("updated instruction", self.instruction, "updated indices", to_ask_indices)
         self.language_inputs, self.txt_embeds = self.agent._set_instruction(self.instruction_encoded)
 
-    # def wta(self, step, nav_probs, nav_outs):
-    #     wta_logits = nav_outs['question_logits']
-    #     wta_probs = F.softmax(wta_logits, dim=1)
-    #     _, ask = wta_probs.max(1)
-    #     ask = ask.cpu().numpy()  # Move the tensor to CPU and convert to NumPy array
-    #     ask = np.logical_and(np.logical_not(self.ended), ask) 
-    #     return ask
     
-    def wta(self, step, nav_probs, nav_outs):
-        ask = self.agent.decide_wta(nav_outs)
-        return ask
+    # def wta(self, step, nav_probs, nav_outs):
+    #     ask = self.agent.decide_wta(nav_outs)
+    #     return ask
     

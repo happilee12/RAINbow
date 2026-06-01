@@ -270,11 +270,13 @@ def make_submit_output(output):
             
 def setWta(wta_mode, navigation_model=None):
     if wta_mode.startswith('every'):
-        print("Setting wta to every interval")
+        print("Setting wta to every interval", wta_mode.split('_')[1])
         return FixedIntervalWtaModule(interval=int(wta_mode.split('_')[1]))
     elif wta_mode.startswith('ct'):
+        print("Setting wta to confidence thresholding with threshold", wta_mode.split('_')[1])
         return ConfidenceThresholdingWtaModule(threshold=float(wta_mode.split('_')[1]))
     elif wta_mode == 'navigation_model':
+        print("Setting wta to navigation model's internal wta")
         return navigation_model
     
 def setAgents(args, target_envs, env_instructions, evaluator, scans):

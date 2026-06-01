@@ -44,10 +44,8 @@ class ScaleVLNModel(Navigation, WTA):
     def __init__(self, basepath, args=None, rank=0):
         from transformers import AutoTokenizer
         default_args = get_default_args(basepath)
-        print("args", args)
         args = merge_args(default_args, args)
         
-        print("args", args)
         super().__init__(args)
         self.rank = rank
         self.agent = GMapNavAgnetWta(args, None, rank)
@@ -160,8 +158,6 @@ class ScaleVLNModel(Navigation, WTA):
         return next_vp_ids, ended, nav_probs, instrucion_for_this_nav, nav_outs
     
     def navigate(self, next_vp_ids, obs, just_ended, traj):
-        ## TODO refactor - do not pass traj
-
         previous_vp_ids = [ob['viewpoint'] for ob in obs]
         self.agent.make_equiv_action(next_vp_ids, self.gmaps, obs, traj)
         new_obs = self.get_obs()
@@ -173,30 +169,29 @@ class ScaleVLNModel(Navigation, WTA):
         paths = [self.gmaps[i].graph.path(previous_vp_ids[i], next_vp_ids[i]) for i in range(len(obs))]
         return new_obs, paths
 
-    def update_instruction(self, to_ask_indices, questions, answers):
+    def update_instruction(self, to_ask_indices, questions, answers, append_behind=False):
         obs = self.get_obs()
         new_instructions = []
         new_instructions_encoded = []
         for i, ob in enumerate(obs):
-            new_instructions.append(f"{answers[i]} {ob['instruction']}")
             target_encoded = self.tokenizer.encode(ob["instruction"])
             answer_encoded = self.tokenizer.encode(answers[i])
-            new_instructions_encoded.append(answer_encoded + target_encoded[1:])
+            if append_behind: # for R2R, RxR test
+                new_instructions.append(f"{ob['instruction']} {answers[i]}")
+                new_instructions_encoded.append(target_encoded + answer_encoded[1:])
+            else:
+                new_instructions.append(f"{answers[i]} {ob['instruction']}")
+                new_instructions_encoded.append(answer_encoded + target_encoded[1:])
 
         for i in to_ask_indices:
             self.instruction[i] = new_instructions[i]
             self.instruction_encoded[i] = new_instructions_encoded[i]
 
-        # print("updated instruction", self.instruction, "updated indices", to_ask_indices)
         self.language_inputs, self.txt_embeds = self.agent._set_instruction(self.instruction_encoded)
 
     def wta(self, step, nav_probs, nav_outs):
         wta_logits = nav_outs['question_logits']
         wta_probs = F.softmax(wta_logits, dim=1)
-
-        # _, ask = wta_probs.max(1)
-        # ask = ask.cpu().numpy()  # Move the tensor to CPU and convert to NumPy array
-        # ask = np.logical_and(np.logical_not(self.ended), ask) 
 
         prob_ask = wta_probs[:, 1]  
         ask = prob_ask > self.wta_question_threshold
