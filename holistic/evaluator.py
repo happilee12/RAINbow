@@ -5,12 +5,13 @@ import networkx as nx
 from collections import defaultdict
 
 class Evaluator:
-    def __init__(self, connectivity_dir, scans, success_margin = 0):
+    def __init__(self, connectivity_dir, scans, success_margin = 0, error_margin = 3.0):
         self.shortest_distances = {}
         self.shortest_paths = {}
         self.connectivity_dir = connectivity_dir
         self.scans = scans
         self.success_margin = success_margin
+        self.error_margin = error_margin
         self._load_nav_graphs()
 
     def load_nav_graphs(self, connectivity_dir, scans):
@@ -59,7 +60,10 @@ class Evaluator:
         return near_id
 
 
-    def _cal_dtw(self, shortest_distances, prediction, reference, success=None, threshold=3.0):
+    def _cal_dtw(self, shortest_distances, prediction, reference, success=None, threshold=None):
+        if threshold is None:
+            threshold = self.error_margin
+
         dtw_matrix = np.inf * np.ones((len(prediction) + 1, len(reference) + 1))
         dtw_matrix[0][0] = 0
         for i in range(1, len(prediction)+1):
@@ -81,7 +85,10 @@ class Evaluator:
             'SDTW': sdtw
         }
 
-    def _cal_cls(self, shortest_distances, prediction, reference, threshold=3.0):
+    def _cal_cls(self, shortest_distances, prediction, reference, threshold=None):
+        if threshold is None:
+            threshold = self.error_margin
+
         def length(nodes):
             return np.sum([
                 shortest_distances[a][b]

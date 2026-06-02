@@ -262,6 +262,7 @@ def make_submit_output(output):
                     'question': detail.get('question'),
                     'answer': detail.get('answer'),
                     'localized_viewpoint': detail.get('localized_viewpoint'),
+                    'viewpoint': detail.get('gt_viewpoint'),
                 })
         submit_item['dialog'] = dialog
         submit_output.append(submit_item)
@@ -402,7 +403,12 @@ def main():
 
     ## set up evaluator
     scans = list(set([item['scan'] for env_name in target_envs for item in env_instructions[env_name]]))
-    evaluator = Evaluator(args.connectivity_dir, scans, success_margin=args.success_margin)
+    evaluator = Evaluator(
+        args.connectivity_dir,
+        scans,
+        success_margin=args.success_margin,
+        error_margin=args.error_margin,
+    )
 
     navigator_agent, guide_agent = setAgents(args, target_envs, env_instructions, evaluator, scans)
 

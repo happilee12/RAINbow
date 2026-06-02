@@ -48,7 +48,8 @@ def parse_args():
     parser.add_argument('--loc_model', type=str, default='GTL', choices=['GCN', 'GTL'])
     parser.add_argument('--nav_wta_question_threshold', type=float, default=0.5)
     parser.add_argument('--benchmark', type=str, default='dialnav') 
-    parser.add_argument('--success_margin', type=int, default=0)
+    parser.add_argument('--success_margin', type=float, default=0, help='Navigation success threshold in meters.')
+    parser.add_argument('--error_margin', type=float, default=3.0, help='Error margin threshold for DTW and CLS metrics.')
     
 
     ### nav options
