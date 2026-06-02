@@ -38,7 +38,7 @@ def merge_args(default_args, new_args):
     
     return Namespace(**merged_dict)
 
-class DST(Navigation, WTA):
+class DST(Navigation):
     def __init__(self, basepath, args=None, rank=0):
         from transformers import AutoTokenizer
         default_args = get_default_args(basepath)
@@ -192,4 +192,3 @@ class DST(Navigation, WTA):
     # def wta(self, step, nav_probs, nav_outs):
     #     ask = self.agent.decide_wta(nav_outs)
     #     return ask
-    
