@@ -253,6 +253,11 @@ def make_submit_output(output):
     for item in output:
         submit_item = {k: v for k, v in item.items() if k != 'navigation_detail'}
         submit_item['path'] = flatten_path(item.get('path', []))
+        ## remove start_pano, end_panos, nav_error, and gt_path from submit output
+        submit_item.pop('start_pano', None)
+        submit_item.pop('end_panos', None)
+        submit_item.pop('nav_error', None)
+        submit_item.pop('gt_path', None)
 
         dialog = []
         for detail in item.get('navigation_detail', []):
@@ -431,6 +436,8 @@ def main():
                 f.write(f"{key}: {value}\n")
             f.write("\n\n")
 
+
+    submit_output = {}
     for env_name in target_envs:
         metrics_acc = {}
         avg_metrics_acc = {}
@@ -456,9 +463,7 @@ def main():
         with open(f"{args.output_path}/{env_name}.json", "w") as f:
             json.dump(output, f, default=lambda x: x.item() if isinstance(x, (bool, np.bool_)) else x)
 
-        submit_output = make_submit_output(output)
-        with open(f"{args.output_path}/{env_name}_for_submit.json", "w") as f:
-            json.dump(submit_output, f, default=lambda x: x.item() if isinstance(x, (bool, np.bool_)) else x)
+        submit_output[env_name]=make_submit_output(output)
 
         avg_metrics, metrics = evaluator.eval_metrics(output)
         metrics_acc[env_name] = metrics
@@ -470,6 +475,8 @@ def main():
         with open(f"{args.output_path}/metrics_{env_name}.json", "w") as f:
             json.dump({'metrics_acc': metrics_acc[env_name]}, f, default=lambda x: x.item() if isinstance(x, (np.int64, np.float64)) else x)
 
+    with open(f"{args.output_path}/submit.json", "w") as f:
+        json.dump(submit_output, f, default=lambda x: x.item() if isinstance(x, (bool, np.bool_)) else x)
 
 
 if __name__ == '__main__':

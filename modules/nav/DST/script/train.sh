@@ -13,14 +13,10 @@ ft_dim=1024
 obj_features=vitbase
 obj_ft_dim=768
 ngpus=1
-
 seed=0
 max_action_len=50
 max_instr_len=200
-
 batch_size=8
-its=200000
-log_every=1000
 
 DATA_ROOT=YOUR_DATA_ROOT_PATH
 flag="--root_dir ${DATA_ROOT}
@@ -39,8 +35,6 @@ flag="--root_dir ${DATA_ROOT}
       --max_instr_len ${max_instr_len} 
       --batch_size ${batch_size}
       --lr 1e-5
-      --iters ${its}
-      --log_every ${log_every}
       --env_aug
       --optim adamW
       --features ${features}

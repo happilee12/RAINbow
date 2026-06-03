@@ -84,6 +84,22 @@ def log_metrics(logger, metrics, prefix="", iteration=None):
     if hasattr(logger, 'wandb_enabled') and logger.wandb_enabled:
         wandb.log(metrics)
 
+def save_checkpoint(agent, save_dir, filename, step, logger=None, note=None):
+    """Save a model checkpoint to a named file under save_dir."""
+    if not save_dir:
+        return None
+
+    save_path = os.path.join(save_dir, filename)
+    agent.save(step, save_path)
+
+    if logger is not None:
+        message = f"Saved checkpoint to {save_path}"
+        if note:
+            message = f"{message} ({note})"
+        logger.info(message)
+
+    return save_path
+
 def build_env(connectivity_dir, ft_file, image_feat_size, batch_size, angle_feat_size, use_gpu=True, preload_all=False):
     feat_db = ImageFeaturesDB(ft_file, image_feat_size, use_gpu=use_gpu, preload_all=preload_all)
     env = GraphEnvBatch(connectivity_dir, feat_db=feat_db, batch_size=batch_size, angle_feat_size=angle_feat_size)
@@ -341,8 +357,14 @@ def train_iteration_based(args, train_data_loader, aug_train_data_loader, val_lo
                     # elif key == "LE" and results[split_type][key] < best_results[split_type][key]:
                     if key == "LE" and results[split_type][key] < best_results[split_type][key]:
                         best_results[split_type][key] = results[split_type][key]
-                        agent.save(iteration, os.path.join(args.model_save_path, f"best_{split_type}_{key}.pth"))
-                        logger.info(f"New best {split_type}_{key}: {results[split_type][key]}")
+                        save_checkpoint(
+                            agent,
+                            args.model_save_path,
+                            f"best_{split_type}_{key}.pth",
+                            iteration,
+                            logger,
+                            note=f"new best {split_type}_{key}: {results[split_type][key]}"
+                        )
             
             # Check for best average LE (seen + unseen) / 2
             if "seen" in results and "unseen" in results:
@@ -351,18 +373,24 @@ def train_iteration_based(args, train_data_loader, aug_train_data_loader, val_lo
                     log_item['val/best_avg_LE'] = current_avg_LE
                     if current_avg_LE < best_avg_LE:
                         best_avg_LE = current_avg_LE
-                        agent.save(iteration, os.path.join(args.model_save_path, f"best_avg_LE.pth"))
-                        logger.info(f"New best average LE: {current_avg_LE:.3f} (seen: {results['seen']['LE']:.3f}, unseen: {results['unseen']['LE']:.3f})")
+                        save_checkpoint(
+                            agent,
+                            args.model_save_path,
+                            "best_avg_LE.pth",
+                            iteration,
+                            logger,
+                            note=f"new best avg LE: {current_avg_LE:.3f}"
+                        )
                        
             # Log to both wandb and file
             if args.wandb_log:
                 wandb.log(log_item)
             logger.info(f"Validation results @ iteration {iteration+1}: {log_item}")
                  
-            # Save latest model
-            agent.save(iteration, os.path.join(args.model_save_path, f"latest.pth"))
-            if (iteration - start_iter) % (args.log_every * 5) == 0:
-                agent.save(iteration, os.path.join(args.model_save_path, f"cp_{iteration}"))
+            # Save latest model after every validation.
+            save_checkpoint(agent, args.model_save_path, "latest.pth", iteration, logger, note="latest validation snapshot")
+            # if (iteration - start_iter) % (args.log_every * 5) == 0:
+            #     save_checkpoint(agent, args.model_save_path, f"cp_{iteration}", iteration, logger, note="periodic snapshot")
             
             # Clear GPU cache after validation
             torch.cuda.empty_cache()
@@ -392,6 +420,10 @@ def train_iteration_based(args, train_data_loader, aug_train_data_loader, val_lo
 
     logger.info("Final validation results:")
     logger.info(log_item)
+
+    # Always keep the final model snapshot, even if no intermediate validation
+    # hit the periodic save condition.
+    save_checkpoint(agent, args.model_save_path, "latest.pth", max_iterations, logger, note="final latest snapshot")
                 
     return final_results
 
