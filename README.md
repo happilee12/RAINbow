@@ -81,7 +81,7 @@ Before training, prepare these folders under the repo root:
 
 `dataset/pretrained` contains the pretrained weights used by navigation and localization training.
 
-### Training scripts
+## Navigator Agent
 
 - Navigation / DST
   - RAINbow paper: [TBA]()
