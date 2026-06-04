@@ -1,6 +1,6 @@
-# Project page: [link](https://happilee12.github.io/RAINbow/)
+# 🌐 Project page: [link](https://happilee12.github.io/RAINbow/)
 
-# Download Dataset
+# 📦 Download Dataset
 - RAIN training dataset: [download](https://drive.google.com/drive/folders/1Rpx1ZCrYlZvB9htLRboT88FA_-MjQbwc?usp=sharing)
 - RAIN evaluation dataset: [download](https://drive.google.com/drive/folders/1u6LHI90UbXSevdw8uYIHTdc6qm7in_bc?usp=sharing)
 - RAINbow dataset: [download](https://drive.google.com/drive/folders/14vyCwBVQm5glJWUu4JQVjO4-axt37kDJ?usp=sharing)
@@ -10,7 +10,7 @@
 ### Quick download
 - Quick download for all datasets: [download](https://drive.google.com/file/d/1A7ri9SveDhSVW-0T_rH7JfUX8z5Wl7jh/view?usp=sharing)
 
-# Requirements
+# ⚙️ Requirements
 1. Install the Matterport3D simulator.
    - Use the latest version, not v0.1.
    - After building it, set:
@@ -36,7 +36,7 @@
    nltk.download('punkt_tab')
    ```
 
-# Evaluation With Provided Trained Models
+# 🧪 Evaluation With Provided Trained Models
 
 Before running evaluation, make sure these folders exist under the repo root:
 
@@ -65,7 +65,7 @@ We tested this setup on 1 x RTX 3090.
 | RAINbow | 58.24 | 4.66 | 29.05 | 11.08 | 20.00 | 10.08 |
 | DialNav | 27.47 | 1.73 | 12.86 | 2.43 | 10.53 | 2.22 |
 
-# Train Each Module
+# 🏋️ Train Each Module
 
 Before training, prepare these folders under the repo root:
 
