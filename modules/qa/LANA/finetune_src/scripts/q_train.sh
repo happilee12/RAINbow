@@ -27,8 +27,6 @@ flag="
   --image_feat_size ${ft_dim}
   --angle_feat_size 4
   --lr 1e-4
-  --iters 100000
-  --log_every 2000
   --batch_size 32
   --target_batch_size 128
   --optim adamW
@@ -63,4 +61,6 @@ CUDA_VISIBLE_DEVICES=0 python3 r2r/main.py $flag \
   --aug_data_dir $aug_data_dir \
   --aug \
   --resume_file $resume_file \
+  --iters 100000 --log_every 2000 \
   # --aug_use_cache \
+

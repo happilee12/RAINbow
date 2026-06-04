@@ -24,7 +24,7 @@ from sv_models.vlnbert_init import get_tokenizer
 from nav_agent.agent import GMapNavAgent, RandomAgent, GMapNavAgnetWta
 from nav_agent.context_agent import GMapWithContextAgent
 
-import wandb
+# import wandb
 
 def build_dataset(args, rank=0, val_only=False, aug=False, except_train_seen=False, is_test=False, 
                   append_q=False, append_history=False, record_file=None):

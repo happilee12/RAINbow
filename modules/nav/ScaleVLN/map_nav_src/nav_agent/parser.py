@@ -4,7 +4,6 @@ import os
 def parse_args():
     parser = argparse.ArgumentParser(description="")
 
-    parser.add_argument('--root_dir', type=str, default='../datasets')
     parser.add_argument('--dataset', type=str, default='cvdn', choices=['cvdn'])
     parser.add_argument('--output_dir', type=str, default='default', help='experiment id')
     parser.add_argument('--seed', type=int, default=0)
@@ -135,44 +134,6 @@ def parse_args():
 
 
 def postprocess_args(args):
-    ROOTDIR = args.root_dir
-
-    # Setup input paths
-    # ft_file_map = {
-    #     'clip.h14': 'clip_vit-h14_mp3d_hm3d_gibson.hdf5',
-    #     'clip.b16': 'clip_vit-b16_mp3d_hm3d_gibson.hdf5'
-    # }
-    
-    # args.aug_ft_file = os.path.join(ROOTDIR, 'R2R', 'features', ft_file_map[args.features])
-
-    # if args.features == 'clip.h14':
-    #     args.mp3d_ft_files = [os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_original.hdf5')]
-    #     args.val_ft_file = os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_original.hdf5')
-    # elif args.features == 'clip.b16':
-    #     args.mp3d_ft_files = [os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-b16_mp3d_original.hdf5')]
-    #     args.val_ft_file = os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-b16_mp3d_original.hdf5')
-
-    # if args.env_aug: # only h14
-    #     args.mp3d_ft_files = [
-    #         os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_img_image_synthesis.hdf5'), 
-    #         os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_img_mask_image_synthesis.hdf5'),
-    #         os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_img_style_transfer.hdf5'),
-    #         os.path.join(ROOTDIR, 'R2R', 'features', 'clip_vit-h14_mp3d_original.hdf5'),
-    #         ]
-
-    # if args.aug:
-    #     args.connectivity_dir = os.path.join(ROOTDIR, 'R2R', 'connectivity')
-    # else:
-    #     args.connectivity_dir = os.path.join(ROOTDIR, 'R2R', 'connectivity_mp3d')
-
-    # args.scan_data_dir = os.path.join(ROOTDIR, 'Matterport3D', 'v1_unzip_scans')
-
-    # args.anno_dir = os.path.join(ROOTDIR, 'R2R', 'annotations')
-    # args.data_dir = os.path.join(ROOTDIR, 'CVDN', 'annotations', 'rain')
-    # args.data_dir = os.path.join(ROOTDIR, 'CVDN', 'annotations', 'ndh')
-    # args.data_dir = os.path.join(ROOTDIR, 'CVDN', 'annotations', 'rain-i')
-    # args.data_dir = os.path.join(ROOTDIR, 'CVDN', 'annotations', args.data_type)
-    
     # Build paths
     args.ckpt_dir = os.path.join(args.output_dir, 'ckpts')
     if args.zero_shot:

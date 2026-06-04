@@ -13,7 +13,7 @@ from src.cross_modal.holistic_loader import Loader as HolisticLoader
 from src.cross_modal.xrn import XRN
 from src.cfg import *
 from src.utils import evaluate
-import wandb
+# import wandb
 import torch.multiprocessing as mp
 mp.set_start_method('spawn', force=True)
 
@@ -352,7 +352,7 @@ if __name__ == "__main__":
     agent = LEDAgent(args)
     if args.wandb_log:
         wandb.init(
-            project="ICLR2026",
+            project="debug",
             group="GCN",
             id=args.run_name,
             config=args

@@ -19,8 +19,8 @@ loc_rainbow="--loc_resume_file ${MODEL_CKPOINTS_PATH}/loc_rainbow.pth --loc_mode
 loc_dialnav="--loc_resume_file ${MODEL_CKPOINTS_PATH}/loc_dialnav.pt --loc_model GCN --loc_node_feats_dir ${BASEPATH}/dataset/modules/node_feats/ --loc_geodistance_nodes_path ${BASEPATH}/dataset/modules/localization/geodistance_nodes.json --loc_embedding_dir ${BASEPATH}/dataset/modules/localization/word_embeddings/"
 
 
-project_id=debug
 ### Run with RAINbow models
+project_id=RAINbow
 CUDA_VISIBLE_DEVICES=0 python3 main.py \
 --id ${project_id} \
 --output_path ${OUTPUT_PATH}/${project_id} \
@@ -37,18 +37,20 @@ $a_rainbow \
 $loc_rainbow
 
 
-# ### Run with DialNav models
-# CUDA_VISIBLE_DEVICES=0 python3 main.py \
-# --id ${project_id} \
-# --output_path ${OUTPUT_PATH}/${project_id} \
-# --basepath ${BASEPATH} \
-# --connectivity_dir ${BASEPATH}/dataset/connectivity/ \
-# --val_seen_anno_paths ${BASEPATH}/dataset/RAIN_evaluation/val_seen.json \
-# --val_unseen_anno_paths ${BASEPATH}/dataset/RAIN_evaluation/val_unseen.json \
-# --qa_clip_tokenizer_path ${BASEPATH}/dataset/modules/clip_tokenizer/bpe_simple_vocab_16e6.txt.gz \
-# --env_names val_seen,val_unseen \
-# $nav_dialnav \
-# $q_dialnav \
-# $wta \
-# $a_dialnav \
-# $loc_dialnav
+### Run with DialNav models
+project_id=dialnav_wta_nav
+CUDA_VISIBLE_DEVICES=0 python3 main.py \
+--id ${project_id} \
+--output_path ${OUTPUT_PATH}/${project_id} \
+--basepath ${BASEPATH} \
+--connectivity_dir ${BASEPATH}/dataset/connectivity/ \
+--val_seen_anno_paths ${BASEPATH}/dataset/RAIN_evaluation/val_seen.json \
+--val_unseen_anno_paths ${BASEPATH}/dataset/RAIN_evaluation/val_unseen.json \
+--test_anno_paths ${BASEPATH}/dataset/RAIN_evaluation/test.json \
+--qa_clip_tokenizer_path ${BASEPATH}/dataset/modules/clip_tokenizer/bpe_simple_vocab_16e6.txt.gz \
+--env_names val_seen,val_unseen,test \
+$nav_dialnav \
+$q_dialnav \
+--wta_mode navigation_model \
+$a_dialnav \
+$loc_dialnav

@@ -1,61 +1,137 @@
+# Download Dataset
+- RAIN training dataset: [download](https://drive.google.com/drive/folders/1Rpx1ZCrYlZvB9htLRboT88FA_-MjQbwc?usp=sharing)
+- RAIN evaluation dataset: [download](https://drive.google.com/drive/folders/1u6LHI90UbXSevdw8uYIHTdc6qm7in_bc?usp=sharing)
+- RAINbow dataset: [download](https://drive.google.com/drive/folders/14vyCwBVQm5glJWUu4JQVjO4-axt37kDJ?usp=sharing)
+- Trained models for this codebase (`DialNav`, `RAINbow`): [download](https://drive.google.com/drive/folders/1Cbf4PkK92Wj2aTANeqfn68xvQY5nZRrF?usp=sharing)
+- Pretrained weights for training: [download](https://drive.google.com/drive/folders/15JsLZqRh4VeOsFPeuieMbG7PvOlhOVKB?usp=sharing)
+
+- Quick download: [download](https://drive.google.com/file/d/1A7ri9SveDhSVW-0T_rH7JfUX8z5Wl7jh/view?usp=sharing)
+
 # Requirements
-1. Install Matterport3D simulators: follow instructions here. We use the latest version instead of v0.1.
-export PYTHONPATH=Matterport3DSimulator/build:$PYTHONPATH
+1. Install the Matterport3D simulator.
+   - Use the latest version, not v0.1.
+   - After building it, set:
+   ```bash
+   export PYTHONPATH=Matterport3DSimulator/build:$PYTHONPATH
+   ```
 
-2. Install requirements
-conda create --name dialnav python=3.10
-conda activate dialnav
-pip install -r requirements.txt
+2. Create the Python environment and install dependencies.
+   ```bash
+   conda create --name dialnav python=3.10
+   conda activate dialnav
+   pip install -r requirements.txt
+   ```
 
-# for lana
-apt-get update && apt-get install -y openjdk-17-jre-headless
+3. Install extra dependencies when needed.
+   - For LANA:
+   ```bash
+   apt-get update && apt-get install -y openjdk-17-jre-headless
+   ```
+   - For GCN localization:
+   ```python
+   import nltk
+   nltk.download('punkt_tab')
+   ```
 
-# for GCN Localization
-import nltk
-nltk.download('punkt_tab')
+# Evaluation With Provided Trained Models
 
-3. download dataset from here #TODO and put it under <directory>/dataset
-it should look like
-directory
-- dataset
-- holistic
-- modules
+Before running evaluation, make sure these folders exist under the repo root:
 
-4. run holisitic task with provided weights
-change YOUR_CODE_DIRECTORY in run.sh to your directory
+```text
+(root)
+├─ holistic/
+├─ modules/
+└─ dataset/
+   ├─ checkpoints/
+   └─ RAIN_evaluation/
+```
+
+`holistic/script/run.sh` uses `YOUR_CODE_DIRECTORY`, so change it to your repo root first.
+`RAINbow` results are stored under `output/rainbow`, and `DialNav` results are stored under `output/dialnav`.
+
+```bash
 cd holistic
 bash script/run.sh
+```
 
-We tested under RTX 3090x1
+We tested this setup on 1 x RTX 3090.
 
+### Expected Results
+The table below uses the final `avg_metrics_*.json` files under `output/`.
 
-5. Training each modules
-현재 기준 SOTA 모델들의 학습 script 를 공유한다.
-## Navigator Agent
-### Navigation Module
-cd /modules/nav/DST/map_nav_src
-bash ../script/local_train.sh 
+| Model combo | val_seen SR | val_seen DTC | val_unseen SR | val_unseen DTC | test SR | test DTC |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| RAINbow | 58.24 | 4.66 | 29.05 | 11.08 | 20.00 | 10.08 |
+| DialNav | 27.47 | 1.73 | 12.86 | 2.43 | 10.53 | 2.22 |
 
-### Question Module
-cd /modules/qa/LANA/finetune_src
-bash scripts/local_q_train.sh 
+# Train Each Module
+
+Before training, prepare these folders under the repo root:
+
+```text
+(root)
+├─ holistic/
+├─ modules/
+└─ dataset/
+   ├─ pretrained/
+   ├─ RAIN/
+   └─ RAINbow/
+```
+
+`dataset/pretrained` contains the pretrained weights used by navigation and localization training.
+
+### Training scripts
+
+- Navigation / DST
+  - RAINbow paper: [TBA]()
+  - dual-strategy training with DUET
+  ```bash
+  cd modules/nav/DST/map_nav_src
+  bash ../script/train.sh
+  ```
+
+- Navigation / ScaleVLN
+  - DialNav: [link](https://happilee12.github.io/DialNav/) 
+  - ScaleVLN: [link](https://scalevln.github.io/)  
+  ```bash
+  cd modules/nav/ScaleVLN/map_nav_src
+  bash ../script/train.sh
+  ```
+
+- Question / LANA
+  - LANA: [link](https://github.com/wxh1996/LANA-VLN) 
+  - trained with RAIN, RAINbow question dataset
+  ```bash
+  cd modules/qa/LANA/finetune_src
+  bash scripts/q_train.sh
+  ```
 
 ## Guide Agent
-### Localization Module
-cd /modules/loc/GTL/gtl
-bash script/local_train.sh 
 
-### Answer Module
-cd /modules/qa/LANA/finetune_src
-bash scripts/local_a_train.sh 
+- Answer / LANA
+  - LANA: [link](https://github.com/wxh1996/LANA-VLN) 
+  - trained with RAIN, RAINbow answer dataset
+  ```bash
+  cd modules/qa/LANA/finetune_src
+  bash scripts/a_train.sh
+  ```
 
+- Localization / GTL
+  - RAINbow paper: [TBA]()  
+  ```bash
+  cd modules/loc/GTL/gtl
+  bash script/train.sh
+  ```
 
+- Localization / GCN
+  - LED : [link](https://meerahahn.github.io/way/)
+  ```bash
+  cd modules/loc/GCN
+  bash local_script.sh
+  ```
 
-
-
-
-This soure is from
-LANA
-ScaleVLN
-DUET
-GCN.. 
+This source is based on the following repositories. Thanks for the contributions:
+- [LANA](https://github.com/wxh1996/LANA-VLN)
+- [ScaleVLN](https://github.com/wz0919/ScaleVLN)
+- [DUET](https://github.com/cshizhe/VLN-DUET)
+- [GCN](https://github.com/meera1hahn/Graph_LED)
