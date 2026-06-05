@@ -91,7 +91,7 @@ def dialNav(navigator,
     traj = [{
             'scan': ob['scan'],
             'start_pano': ob['viewpoint'],
-            'gt_path': ob['gt_path'],
+            # 'gt_path': ob['gt_path'],
             'end_panos': ob['end_panos'],
             'target': ob['instruction'],
             'instr_id': ob['instr_id'],
@@ -126,8 +126,8 @@ def dialNav(navigator,
             print(f"[Step {step}] to_ask_indices: {to_ask_indices}")
         scanIds = [obs[i]['scan'] for i in range(batch_size)]
         viewpoints = [obs[i]['viewpoint'] for i in range(batch_size)]
-        # goals = [obs[i]['end_panos'] for i in range(batch_size)]
-        goals = [obs[i]['gt_path'][-1] for i in range(batch_size)]
+        goals = [obs[i]['end_panos'] for i in range(batch_size)]
+        # goals = [obs[i]['gt_path'][-1] for i in range(batch_size)]
 
         if need_dialog:
             if mode == 'gt_loc':
@@ -141,7 +141,7 @@ def dialNav(navigator,
                 localized_viewpoints = guide.localize(scanIds, questions)
                 # print("localized viewpoints", viewpoints)
             
-            paths = [guide._choose_path(scanId, viewpoint, [goal]) for scanId, viewpoint, goal in zip(scanIds, localized_viewpoints, goals)]
+            paths = [guide._choose_path(scanId, viewpoint, goal) for scanId, viewpoint, goal in zip(scanIds, localized_viewpoints, goals)]
 
             answers, answer_seen_path = guide.answer(scanIds, localized_viewpoints, paths)
             navigator.update_instruction(to_ask_indices, questions, answers, append_behind=update_answer_behind)
@@ -403,8 +403,10 @@ def main():
     env_instructions = load_instruction_data_universal(args, target_envs, tokenizer)
     if args.debug and 'val_seen' in env_instructions:
         env_instructions['val_seen'] = env_instructions['val_seen'][:16]
-        print(f"Debug mode enabled: using first 16 samples from val_seen only.")
-        target_envs = ['val_seen']
+        # print(f"Debug mode enabled: using first 16 samples from val_seen only.")
+        # target_envs = ['val_seen']
+        env_instructions['val_unseen'] = env_instructions['val_unseen'][:16]
+        env_instructions['test'] = env_instructions['test'][:16]
 
     ## set up evaluator
     scans = list(set([item['scan'] for env_name in target_envs for item in env_instructions[env_name]]))

@@ -123,7 +123,7 @@ class ScaleVLNModel(Navigation, WTA):
                 'navigableLocations' : state.navigableLocations,
                 'instruction' : item['instruction'],
                 'instr_encoding': item['instr_encoding'],
-                'gt_path' : item['path'],
+                # 'gt_path' : item['path'],
                 'path_id' : item['path_id'],
                 'end_panos' : item['end_panos'],
             }

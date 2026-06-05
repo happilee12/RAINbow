@@ -270,7 +270,7 @@ class R2RNavBatch(object):
                 'navigableLocations' : state.navigableLocations,
                 'instruction' : item['instruction'],
                 'instr_encoding': item['instr_encoding'],
-                'gt_path' : item['path'],
+                # 'gt_path' : item['path'],
                 'path_id' : item['path_id']
             }
             # RL reward. The negative distance between the state and the final state
@@ -288,7 +288,7 @@ class R2RNavBatch(object):
         self._next_minibatch(**kwargs)
         
         scanIds = [item['scan'] for item in self.batch]
-        viewpointIds = [item['path'][0] for item in self.batch]
+        viewpointIds = [item['start_pano'] for item in self.batch]
         headings = [item['heading'] for item in self.batch]
         self.env.newEpisodes(scanIds, viewpointIds, headings)
         # return self._get_obs()
@@ -333,10 +333,10 @@ class R2RNavBatch(object):
         scores['spl'] = scores['success'] * gt_lengths / max(scores['trajectory_lengths'], gt_lengths, 0.01)
         scores['oracle_success'] = float(scores['oracle_error'] < ERROR_MARGIN)
 
-        scores.update(
-            cal_dtw(shortest_distances, path, gt_path, scores['success'], ERROR_MARGIN)
-        )
-        scores['CLS'] = cal_cls(shortest_distances, path, gt_path, ERROR_MARGIN)
+        # scores.update(
+        #     cal_dtw(shortest_distances, path, gt_path, scores['success'], ERROR_MARGIN)
+        # )
+        # scores['CLS'] = cal_cls(shortest_distances, path, gt_path, ERROR_MARGIN)
 
         return scores
 
@@ -364,9 +364,9 @@ class R2RNavBatch(object):
             'lengths': np.mean(metrics['trajectory_lengths']),
             'nav_error': np.mean(metrics['nav_error']),
             'oracle_error': np.mean(metrics['oracle_error']),
-            'nDTW': np.mean(metrics['nDTW']) * 100,
-            'SDTW': np.mean(metrics['SDTW']) * 100,
-            'CLS': np.mean(metrics['CLS']) * 100,
+            # 'nDTW': np.mean(metrics['nDTW']) * 100,
+            # 'SDTW': np.mean(metrics['SDTW']) * 100,
+            # 'CLS': np.mean(metrics['CLS']) * 100,
         }
         return avg_metrics, metrics
         

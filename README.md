@@ -9,6 +9,7 @@
 
 ### Quick download
 - Quick download for all datasets: [download](https://drive.google.com/file/d/1A7ri9SveDhSVW-0T_rH7JfUX8z5Wl7jh/view?usp=sharing)
+- This dataset also includes connectivity and required features for models.
 
 # ⚙️ Requirements
 1. Install the Matterport3D simulator.

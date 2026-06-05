@@ -16,7 +16,7 @@ def construct_instrs(anno_paths, tokenizer, max_instr_len=512):
         instr_encoding = tokenizer.encode(instruction)
         item['instr_encoding'] = instr_encoding[-max_instr_len:]
         item['instruction'] = instruction
-        item['path'] = item['nav_steps']
+        # item['path'] = item['nav_steps']
         item['heading'] = 3.14
         data.append(item)
     return data
@@ -30,7 +30,6 @@ def construct_instrs_universal(anno_paths, tokenizer, max_instr_len=512, prefix=
         instr_encoding = tokenizer.encode(instruction)
         item['instr_encoding'] = instr_encoding[-max_instr_len:]
         item['instruction'] = instruction
-        item['path'] = item['nav_steps']
         item['heading'] = 3.14
         data.append(item)
     return data

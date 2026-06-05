@@ -120,7 +120,7 @@ class DST(Navigation):
                 'navigableLocations' : state.navigableLocations,
                 'instruction' : item['instruction'],
                 'instr_encoding': item['instr_encoding'],
-                'gt_path' : item['path'],
+                # 'gt_path' : item['path'],
                 'path_id' : item['path_id'],
                 'end_panos' : item['end_panos'],
             }
@@ -155,8 +155,6 @@ class DST(Navigation):
         return next_vp_ids, ended, nav_probs, instrucion_for_this_nav, nav_outs
     
     def navigate(self, next_vp_ids, obs, just_ended, traj):
-        ## TODO refactor - do not pass traj
-
         previous_vp_ids = [ob['viewpoint'] for ob in obs]
         self.agent.make_equiv_action(next_vp_ids, self.gmaps, obs, traj)
         new_obs = self.get_obs()
