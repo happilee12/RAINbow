@@ -4,12 +4,12 @@
 - RAIN training dataset: [download](https://drive.google.com/drive/folders/1Rpx1ZCrYlZvB9htLRboT88FA_-MjQbwc?usp=sharing)
 - RAIN evaluation dataset: [download](https://drive.google.com/drive/folders/1u6LHI90UbXSevdw8uYIHTdc6qm7in_bc?usp=sharing)
 - RAINbow dataset: [download](https://drive.google.com/drive/folders/14vyCwBVQm5glJWUu4JQVjO4-axt37kDJ?usp=sharing)
-- Trained models for this codebase (`DialNav`, `RAINbow`): [download](https://drive.google.com/drive/folders/1Cbf4PkK92Wj2aTANeqfn68xvQY5nZRrF?usp=sharing)
-- Pretrained weights for training: [download](https://drive.google.com/drive/folders/15JsLZqRh4VeOsFPeuieMbG7PvOlhOVKB?usp=sharing)
+<!-- - Trained models for this codebase (`DialNav`, `RAINbow`): [download](https://drive.google.com/drive/folders/1Cbf4PkK92Wj2aTANeqfn68xvQY5nZRrF?usp=sharing)
+- Pretrained weights for training: [download](https://drive.google.com/drive/folders/15JsLZqRh4VeOsFPeuieMbG7PvOlhOVKB?usp=sharing) -->
 
-### Quick download
-- Quick download for all datasets: [download](https://drive.google.com/file/d/1A7ri9SveDhSVW-0T_rH7JfUX8z5Wl7jh/view?usp=sharing)
-- This dataset also includes connectivity and required features for models.
+### Full download
+- Download for all datasets: [download](https://drive.google.com/file/d/11i4eqslpxZerIhrZqB-S-CYQYnwljSEQ/view?usp=sharing)
+- Full dataset including all above dataset, trained models, connectivity and required features.
 
 # ⚙️ Requirements
 1. Install the Matterport3D simulator.
