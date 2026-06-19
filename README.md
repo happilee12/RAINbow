@@ -85,7 +85,7 @@ Before training, prepare these folders under the repo root:
 ## Navigator Agent
 
 - Navigation / DST
-  - RAINbow paper: [TBA]()
+  - RAINbow paper: [link](https://arxiv.org/pdf/2606.19948)
   - dual-strategy training with DUET
   ```bash
   cd modules/nav/DST/map_nav_src
@@ -119,7 +119,7 @@ Before training, prepare these folders under the repo root:
   ```
 
 - Localization / GTL
-  - RAINbow paper: [TBA]()  
+  - RAINbow paper: [link](https://arxiv.org/pdf/2606.19948)
   ```bash
   cd modules/loc/GTL/gtl
   bash script/train.sh
