@@ -72,7 +72,6 @@ challenge per-sample scoring.
 | `train.json` | 1,559 | train split |
 | `val_seen.json` | 91 | validation, seen scans |
 | `val_unseen.json` | 241 | validation, unseen scans |
-| `test.json` | 285 | test split (final ranking) |
 
 ### Fields
 
