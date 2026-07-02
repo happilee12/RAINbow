@@ -20,7 +20,7 @@
 - Pretrained weights for training: [download](https://drive.google.com/drive/folders/15JsLZqRh4VeOsFPeuieMbG7PvOlhOVKB?usp=sharing) -->
 
 ### Full download
-- Download for all datasets: [download](https://drive.google.com/file/d/11i4eqslpxZerIhrZqB-S-CYQYnwljSEQ/view?usp=sharing)
+- Download for all datasets: [download](https://drive.google.com/file/d/1J51IWSej8PdLUd9VG-H2_knxw1dv_lLY/view?usp=sharing)
 - Full dataset including all above dataset, trained models, connectivity and required features.
 
 # ⚙️ Requirements
@@ -121,6 +121,11 @@ python holistic/make_per_sample_score.py \
   --splits val_seen,val_unseen \
   --out _output/holistic/rainbow/per_sample_score.csv
 ```
+
+> **Note on the `test` split.** `test.json` is **not released to participants** —
+> only `val_seen` / `val_unseen` are available for local scoring. The test set is
+> collected and kept privately by the organizers, and the **final challenge score is
+> computed by the organizers on that held-out `test` set**.
 
 
 # 🏋️ Train Each Module
