@@ -2,7 +2,7 @@
 
 # 📦 Download Dataset
 - RAIN training dataset: [download](https://drive.google.com/drive/folders/1Rpx1ZCrYlZvB9htLRboT88FA_-MjQbwc?usp=sharing)
-- RAIN evaluation dataset: [download](https://drive.google.com/drive/folders/1u6LHI90UbXSevdw8uYIHTdc6qm7in_bc?usp=sharing)
+- RAIN_holistic dataset: [download](https://drive.google.com/drive/folders/1u6LHI90UbXSevdw8uYIHTdc6qm7in_bc?usp=sharing)
 - RAINbow dataset: [download](https://drive.google.com/drive/folders/14vyCwBVQm5glJWUu4JQVjO4-axt37kDJ?usp=sharing)
 <!-- - Trained models for this codebase (`DialNav`, `RAINbow`): [download](https://drive.google.com/drive/folders/1Cbf4PkK92Wj2aTANeqfn68xvQY5nZRrF?usp=sharing)
 - Pretrained weights for training: [download](https://drive.google.com/drive/folders/15JsLZqRh4VeOsFPeuieMbG7PvOlhOVKB?usp=sharing) -->
@@ -47,7 +47,7 @@ Before running evaluation, make sure these folders exist under the repo root:
 ├─ modules/
 └─ dataset/
    ├─ checkpoints/
-   └─ RAIN_evaluation/
+   └─ RAIN_holistic/
 ```
 
 `holistic/script/run.sh` uses `YOUR_CODE_DIRECTORY`, so change it to your repo root first.
@@ -65,6 +65,51 @@ We tested this setup on 1 x RTX 3090.
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | RAINbow | 58.24 | 4.66 | 29.05 | 11.08 | 20.00 | 10.08 |
 | DialNav | 27.47 | 1.73 | 12.86 | 2.43 | 10.53 | 2.22 |
+
+# 🏆 Challenge
+
+The RAIN / DialNav benchmark is used for the **DialNav Challenge at ECCV 2026 EAD**.
+Prepare a split-keyed `submission.json` (`val_seen` / `val_unseen` / `test`) and
+upload it to the evaluation server.
+
+## Evaluation Protocol
+
+Each episode is scored with a **per-sample score** that rewards reaching the
+target while using dialog efficiently:
+
+```text
+Score = E(D) × Success
+
+E(D)  = 1 - min( max(DTC - DTC_GT, 0) / (NSC_GT - DTC_GT), 1 )
+```
+
+- **Success** — `1` if the agent stops at the target location, else `0`.
+- **DTC** — Dialog Turn Count used by the agent.
+- **DTC_GT** — ground-truth dialog turn count (`len(dialog)`).
+- **NSC_GT** — ground-truth navigation trajectory length (`len(nav_trajectory)`).
+
+`E(D)` stays at `1.0` while the agent asks no more than the ground-truth number of
+dialog turns, and decays linearly to `0` as the excess dialog turns approach the
+ground-truth navigation length. A failed episode scores `0`.
+
+A split's score is the **mean per-sample score** over its episodes. The public
+leaderboard reports **val_seen** and **val_unseen**; the **final ranking score is
+determined on the `test` split** by the organizers.
+
+## Viewing Scores
+
+Compute the per-episode scores and per-split averages from a run's `submit.json`
+and the `RAIN_holistic` ground truth (run from the repo root):
+
+```bash
+python holistic/make_per_sample_score.py \
+  --submit your_sumbission_file \
+  --split_dir dataset/RAIN_holistic \
+  --connectivity_dir dataset/connectivity \
+  --splits val_seen,val_unseen \
+  --out _output/holistic/rainbow/per_sample_score.csv
+```
+
 
 # 🏋️ Train Each Module
 

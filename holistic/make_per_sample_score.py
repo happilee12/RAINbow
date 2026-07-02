@@ -2,7 +2,9 @@
 
 Reproduces the per-sample RAINbow score table. All columns are recomputed from:
   - submit.json  : model output (path, dialog) per split
-  - split/*.json : ground truth (nav_trajectory, dialog, meta.scan, meta.end_panos)
+  - split/*.json : ground truth (nav_trajectory, dialog, scan, end_panos).
+                   Accepts both flat records (RAIN_holistic, scan/end_panos at
+                   top level) and meta-wrapped records (RAIN_full, under 'meta').
   - connectivity : navigation graphs, used to compute Navigation Error / success
 
 Per-sample scoring formula:
@@ -21,7 +23,7 @@ score_x_success / count), then a blank line, then the per-sample table.
 Usage:
   python holistic/make_per_sample_score.py \
       --submit   _output/holistic/rainbow/submit.json \
-      --split_dir dataset/RAIN_full/split \
+      --split_dir dataset/RAIN_holistic \
       --connectivity_dir dataset/connectivity \
       --out      _output/holistic/rainbow/per_sample_score.csv
   # restrict to specific splits:
@@ -72,6 +74,19 @@ def load_ground_truth(split_dir, splits):
     return gt
 
 
+def gt_scan_and_end(g):
+    """Return (scan, end_panos) from a ground-truth record.
+
+    Supports both schemas: flat records where scan/end_panos are top-level
+    (RAIN_holistic) and meta-wrapped records where they live under g['meta']
+    (RAIN_full).
+    """
+    meta = g.get('meta', g)
+    scan = g.get('scan', meta.get('scan'))
+    end_panos = g.get('end_panos', meta.get('end_panos'))
+    return scan, end_panos
+
+
 def build_rows(submit, gt, evaluator, splits, ndigits=6, success_margin=0.0):
     """Compute the per-sample score rows for the requested splits."""
     rows = []
@@ -79,7 +94,7 @@ def build_rows(submit, gt, evaluator, splits, ndigits=6, success_margin=0.0):
         for it in submit[sp]:
             iid = int(it['instr_id'])
             g = gt[sp][iid]
-            meta = g['meta']
+            scan, end_panos = gt_scan_and_end(g)
 
             flat_path = flatten(it['path'])
             nsc = len(flat_path)
@@ -87,7 +102,7 @@ def build_rows(submit, gt, evaluator, splits, ndigits=6, success_margin=0.0):
             nsc_gt = len(g['nav_trajectory'])
             dtc_gt = len(g['dialog'])
 
-            nav_error = float(evaluator.get_shortest(meta['scan'], flat_path[-1], meta['end_panos']))
+            nav_error = float(evaluator.get_shortest(scan, flat_path[-1], end_panos))
             success = 1 if nav_error <= success_margin else 0
 
             score = round(episode_score(dtc, dtc_gt, nsc_gt), ndigits)
@@ -156,7 +171,7 @@ def generate(submit_path, split_dir, connectivity_dir, out, splits=None,
             raise KeyError(f'splits not present in {submit_path}: {missing}')
 
     gt = load_ground_truth(split_dir, splits)
-    scans = sorted({gt[sp][int(it['instr_id'])]['meta']['scan']
+    scans = sorted({gt_scan_and_end(gt[sp][int(it['instr_id'])])[0]
                     for sp in splits for it in submit[sp]})
     evaluator = Evaluator(connectivity_dir, scans,
                           success_margin=success_margin, error_margin=error_margin)
@@ -169,7 +184,7 @@ def generate(submit_path, split_dir, connectivity_dir, out, splits=None,
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--submit', default='_output/holistic/rainbow/submit.json')
-    ap.add_argument('--split_dir', default='dataset/RAIN_full/split')
+    ap.add_argument('--split_dir', default='dataset/RAIN_holistic')
     ap.add_argument('--connectivity_dir', default='dataset/connectivity')
     ap.add_argument('--out', default='_output/holistic/rainbow/per_sample_score.csv')
     ap.add_argument('--splits', default='val_seen,val_unseen',

@@ -26,8 +26,8 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py \
 --output_path ${OUTPUT_PATH}/${project_id} \
 --basepath ${BASEPATH} \
 --connectivity_dir ${BASEPATH}/dataset/connectivity/ \
---val_seen_anno_paths ${BASEPATH}/dataset/RAIN_evaluation/val_seen.json \
---val_unseen_anno_paths ${BASEPATH}/dataset/RAIN_evaluation/val_unseen.json \
+--val_seen_anno_paths ${BASEPATH}/dataset/RAIN_holistic/val_seen.json \
+--val_unseen_anno_paths ${BASEPATH}/dataset/RAIN_holistic/val_unseen.json \
 --qa_clip_tokenizer_path ${BASEPATH}/dataset/modules/clip_tokenizer/bpe_simple_vocab_16e6.txt.gz \
 --env_names val_seen,val_unseen \
 $nav_rainbow \
@@ -44,9 +44,9 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py \
 --output_path ${OUTPUT_PATH}/${project_id} \
 --basepath ${BASEPATH} \
 --connectivity_dir ${BASEPATH}/dataset/connectivity/ \
---val_seen_anno_paths ${BASEPATH}/dataset/RAIN_evaluation/val_seen.json \
---val_unseen_anno_paths ${BASEPATH}/dataset/RAIN_evaluation/val_unseen.json \
---test_anno_paths ${BASEPATH}/dataset/RAIN_evaluation/test.json \
+--val_seen_anno_paths ${BASEPATH}/dataset/RAIN_holistic/val_seen.json \
+--val_unseen_anno_paths ${BASEPATH}/dataset/RAIN_holistic/val_unseen.json \
+--test_anno_paths ${BASEPATH}/dataset/RAIN_holistic/test.json \
 --qa_clip_tokenizer_path ${BASEPATH}/dataset/modules/clip_tokenizer/bpe_simple_vocab_16e6.txt.gz \
 --env_names val_seen,val_unseen,test \
 $nav_dialnav \
