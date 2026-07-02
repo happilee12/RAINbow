@@ -2,7 +2,7 @@
 
 # 📦 Download Dataset
 - RAIN training dataset: [download](https://drive.google.com/drive/folders/1Rpx1ZCrYlZvB9htLRboT88FA_-MjQbwc?usp=sharing)
-- RAIN_holistic dataset: [download](https://drive.google.com/drive/folders/1u6LHI90UbXSevdw8uYIHTdc6qm7in_bc?usp=sharing)
+- RAIN holistic dataset (for evaluation): [download](https://drive.google.com/drive/folders/1u37dzT1NbnTQwAdIo0cB7Cq1o2eT3QhK?usp=sharing)
 - RAINbow dataset: [download](https://drive.google.com/drive/folders/14vyCwBVQm5glJWUu4JQVjO4-axt37kDJ?usp=sharing)
 <!-- - Trained models for this codebase (`DialNav`, `RAINbow`): [download](https://drive.google.com/drive/folders/1Cbf4PkK92Wj2aTANeqfn68xvQY5nZRrF?usp=sharing)
 - Pretrained weights for training: [download](https://drive.google.com/drive/folders/15JsLZqRh4VeOsFPeuieMbG7PvOlhOVKB?usp=sharing) -->
