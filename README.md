@@ -1,7 +1,7 @@
 <h1 align="center">RAINbow</h1>
 
 <p align="center">
-  Baselines for the <b>RAINbow</b> benchmark &mdash; <a href="#"><b>ECCV 2026 EAD Challenge</b></a>
+  Baselines for the <b>DialNav</b> benchmark &mdash;
 </p>
 
 <p align="center">
