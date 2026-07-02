@@ -335,39 +335,41 @@ def load_submission(submission_file):
         return json.load(f)
 
 
-def _gt_lengths_from_metadata(metadata, instr_id=None):
-    """Extract the ground-truth quantities the per-sample score needs.
+def _load_split_gt_lengths(env_info_dir, split):
+    """Load per-episode ground-truth lengths from the split file.
 
-    NSC_GT : length of the ground-truth navigation trajectory.
-    DTC_GT : ground-truth dialog turn count.
+    Reads ``Path(env_info_dir) / f'{split}.json'`` (e.g. ``val_seen.json``),
+    the same split format as ``dataset/RAIN_full/split``, and returns
+    ``{str(instr_id): (NSC_GT, DTC_GT)}`` where
 
-    These must be provided by episode_metadata_by_split.json, either directly
-    as integer fields (``nsc_gt`` / ``dtc_gt``) or as the ground-truth
-    sequences they are derived from (``nav_trajectory`` / ``dialog``).
+    NSC_GT : length of the ground-truth navigation trajectory (``nav_trajectory``)
+    DTC_GT : ground-truth dialog turn count (``dialog``)
     """
-    def as_len(value):
-        return len(value) if isinstance(value, (list, tuple)) else int(value)
-
-    nsc_gt = None
-    for key in ('nsc_gt', 'NSC_GT', 'nav_trajectory', 'gt_nav_trajectory', 'gt_path'):
-        if metadata.get(key) is not None:
-            nsc_gt = as_len(metadata[key])
-            break
-
-    dtc_gt = None
-    for key in ('dtc_gt', 'DTC_GT', 'dialog', 'gt_dialog'):
-        if metadata.get(key) is not None:
-            dtc_gt = as_len(metadata[key])
-            break
-
-    if nsc_gt is None or dtc_gt is None:
-        raise ValueError(
-            f"Episode metadata for instr_id={instr_id} is missing ground-truth "
-            "fields required by the per-sample score. Provide integer "
-            "'nsc_gt'/'dtc_gt', or the GT sequences 'nav_trajectory'/'dialog'."
+    gt_path = Path(env_info_dir) / f'{split}.json'
+    if not gt_path.exists():
+        raise FileNotFoundError(
+            f"Ground-truth split file not found: {gt_path}. The per-sample score "
+            f"requires '{split}.json' (with per-episode 'nav_trajectory' and "
+            "'dialog') in the reference env_info directory."
         )
 
-    return nsc_gt, dtc_gt
+    with gt_path.open('r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    lengths = {}
+    for record in data:
+        instr_id = record.get('instr_id')
+        try:
+            nsc_gt = len(record['nav_trajectory'])
+            dtc_gt = len(record['dialog'])
+        except KeyError as e:
+            raise KeyError(
+                f"GT record for instr_id={instr_id} in {gt_path} is missing {e} "
+                "(expected 'nav_trajectory' and 'dialog')."
+            )
+        lengths[str(instr_id)] = (nsc_gt, dtc_gt)
+
+    return lengths
 
 
 def _episode_score(dtc, dtc_gt, nsc_gt, success):
@@ -472,6 +474,10 @@ def _evaluate_submission_data(
                 raise ValueError(f'Submission item is missing instr_id in split "{split}": {item}')
             pred_by_instr[str(instr_id)] = item
 
+        # Per-sample score is computed for the validation splits only; load the
+        # ground-truth lengths (NSC_GT / DTC_GT) from the split file for those.
+        gt_lengths = None if split == 'test' else _load_split_gt_lengths(env_info_dir, split)
+
         split_metrics = defaultdict(list)
         for instr_id, metadata in split_metadata.items():
             item = pred_by_instr.get(str(instr_id))
@@ -525,7 +531,12 @@ def _evaluate_submission_data(
                 if item is None:
                     split_metrics['score'].append(0.0)
                 else:
-                    nsc_gt, dtc_gt = _gt_lengths_from_metadata(metadata, instr_id)
+                    if str(instr_id) not in gt_lengths:
+                        raise KeyError(
+                            f"instr_id={instr_id} in split '{split}' has no matching "
+                            f"ground-truth entry in {split}.json."
+                        )
+                    nsc_gt, dtc_gt = gt_lengths[str(instr_id)]
                     split_metrics['score'].append(
                         _episode_score(dtc, dtc_gt, nsc_gt, scores['success'])
                     )

@@ -22,7 +22,12 @@ RESULTS_FILE = "leaderboard.csv"
 LEADERBOARD_COLUMNS = [
     "team_name",
     "method_name",
-    
+
+    # Per-sample score = E(D) * Success, averaged per split (validation only).
+    # The final ranking score is computed on the test split offline.
+    "score_unseen",
+    "score_seen",
+
     "sr_test",
     "sr_unseen",
     "sr_seen",
@@ -51,6 +56,9 @@ LEADERBOARD_COLUMNS = [
 ]
 
 NUMERIC_COLUMNS = [
+    "score_unseen",
+    "score_seen",
+
     "sr_test",
     "sr_unseen",
     "sr_seen",
@@ -106,6 +114,8 @@ def get_env_info_dir() -> str:
         shortest_distances_by_split.json
         shortest_paths_by_split.json
         episode_metadata_by_split.json
+        val_seen.json        # GT split files for the per-sample score
+        val_unseen.json
     """
     if not REFERENCE_REPO:
         raise ValueError("REFERENCE_REPO is not configured.")
@@ -119,6 +129,10 @@ def get_env_info_dir() -> str:
             "shortest_paths_by_split.json",
             "episode_metadata_by_split.json",
             "scans_by_split.json",
+            # Split ground-truth files, used for the per-sample score
+            # (NSC_GT = len(nav_trajectory), DTC_GT = len(dialog)).
+            "val_seen.json",
+            "val_unseen.json",
         ],
     )
 
@@ -257,9 +271,11 @@ def sort_leaderboard(df: pd.DataFrame) -> pd.DataFrame:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
 
+    # Public leaderboard is ordered by the validation per-sample scores.
+    # The final ranking is decided on the test split offline.
     df = df.sort_values(
-        by=["sr_test", "sr_unseen", "sr_seen"],
-        ascending=[False, False, False],
+        by=["score_unseen", "score_seen"],
+        ascending=[False, False],
     ).reset_index(drop=True)
 
     return df
@@ -268,12 +284,15 @@ def sort_leaderboard(df: pd.DataFrame) -> pd.DataFrame:
 def build_result_row(team_name, method_name, scores, submitted_at):
     """
     Build one leaderboard row from evaluator output.
-    Final score and split-level score columns are intentionally not displayed
-    on the public leaderboard.
+    The public leaderboard shows the per-sample score on val_seen / val_unseen
+    only; the final ranking score is computed on the test split offline.
     """
 
 
     row = {
+        "score_unseen": scores.get("score_unseen", 0.0),
+        "score_seen": scores.get("score_seen", 0.0),
+
         "sr_test": scores.get("sr_test", 0.0),
         "sr_unseen": scores.get("sr_unseen", 0.0),
         "sr_seen": scores.get("sr_seen", 0.0),
@@ -350,8 +369,12 @@ def submit(
         message = (
             "Submission received successfully.\n\n"
             f"Saved submission path: `{saved_path}`\n\n"
-            "Scores:\n\n"
-            f"- SR Test: **{float(scores.get('sr_test', 0.0)):.2f}**\n"
+            "Per-sample score (E(D) × Success), averaged per validation split:\n\n"
+            f"- Score Unseen: **{float(scores.get('score_unseen', 0.0)):.4f}**\n"
+            f"- Score Seen: {float(scores.get('score_seen', 0.0)):.4f}\n\n"
+            "The final ranking score is computed on the test split offline.\n\n"
+            "Success rate (reference):\n\n"
+            f"- SR Test: {float(scores.get('sr_test', 0.0)):.2f}\n"
             f"- SR Unseen: {float(scores.get('sr_unseen', 0.0)):.2f}\n"
             f"- SR Seen: {float(scores.get('sr_seen', 0.0)):.2f}\n"
         )
@@ -386,7 +409,34 @@ Please fill out the following form to stay updated on DialNav Challenge announce
 
 ## Evaluation Protocol
 
-Detailed evaluation protocol and scoring rules will be announced later.
+Each episode is scored with a **per-sample score** that rewards reaching the
+target while using dialog efficiently:
+
+```
+Score = E(D) × Success
+
+E(D)  = 1 - min( max(DTC - DTC_GT, 0) / (NSC_GT - DTC_GT), 1 )
+```
+
+- **Success** — 1 if the agent stops at the target location, 0 otherwise.
+- **DTC** — Dialog Turn Count: the number of dialog turns the agent used.
+- **DTC_GT** — the ground-truth dialog turn count for the episode.
+- **NSC_GT** — the ground-truth navigation trajectory length (number of steps).
+
+`E(D)` is the dialog-efficiency term. It stays at 1.0 as long as the agent asks
+no more than the ground-truth number of dialog turns, and decays linearly toward
+0 as the number of *excess* dialog turns approaches the ground-truth navigation
+length. An unsuccessful episode scores 0 regardless of dialog usage.
+
+A split's score is the **mean per-sample score** over all of its episodes.
+
+### Leaderboard vs. final score
+
+- The **public leaderboard** reports the average per-sample score on the
+  **val_seen** and **val_unseen** splits.
+- The **final ranking score is determined on the test split** and is computed
+  offline by the organizers. Test-split scores are not shown on the public
+  leaderboard, so participants must not tune on the test set.
 """
 
 SUBMIT_TEXT = """
