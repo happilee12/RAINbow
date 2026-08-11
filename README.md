@@ -12,6 +12,45 @@
   <a href="https://github.com/happilee12/RAINbow/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-4c9a2a" alt="License MIT"></a>
 </p>
 
+> ## ⚠️ Important Note!!
+>
+> ### 1. The test set is released -- please submit again
+>
+> The test set has been newly released, and every participant must submit again. We found
+> that it had not actually been released to participants.
+>
+> Test set download: https://drive.google.com/file/d/13GsIPcRP8sVW82PAJFSF3hDKKKzn2Nvo/view?usp=drive_link
+>
+> Please run your method on the newly released test set and include the resulting `test`
+> split in a new submission to the
+> [DialNav Challenge leaderboard](https://huggingface.co/spaces/lee1o21k21/DialNav-Challenge).
+>
+> **Note:** the released test set does not include the human-annotated dialog and
+> navigation trajectory. Those annotations are what the score is computed from, and the
+> organizers will calculate the final score offline using them.
+>
+> The final winner is decided on the test split only -- val_seen and val_unseen are not
+> taken into account. The test split score is calculated with the
+> [Evaluation Protocol](#evaluation-protocol) described below on this page.
+>
+> The [leaderboard](https://huggingface.co/spaces/lee1o21k21/DialNav-Challenge) shows the
+> test success rate and the other reference metrics, but not the test split score. After
+> the challenge period ends, we will contact the top submissions based on that score.
+>
+> Because the score is hidden, please check that your SR Test on the leaderboard reflects
+> your own method.
+>
+> ### 2. For submissions made before Aug 10, 23:00 UTC
+>
+> Please email happilee12@korea.ac.kr with your team name. This is to ensure that your
+> submission is considered for the final ranking, since the test set was not released at
+> that time.
+>
+> ### 3. Submission deadline extended to Aug 15 AoE
+>
+> We know that re-running your method is extra work at short notice, and we sincerely
+> apologize for the inconvenience. We have adjusted the schedule accordingly.
+
 # 📦 Download Dataset
 - RAIN training dataset: [download](https://drive.google.com/drive/folders/1Rpx1ZCrYlZvB9htLRboT88FA_-MjQbwc?usp=sharing)
 - RAIN holistic dataset (for evaluation): [download](https://drive.google.com/drive/folders/1u37dzT1NbnTQwAdIo0cB7Cq1o2eT3QhK?usp=sharing)
