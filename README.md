@@ -8,7 +8,7 @@
   <a href="https://arxiv.org/abs/2606.19948"><img src="https://img.shields.io/badge/arXiv-2606.19948-b31b1b" alt="arXiv"></a>
   <a href="https://happilee12.github.io/RAINbow/"><img src="https://img.shields.io/badge/Project-Page-1f72c1" alt="Project Page"></a>
   <a href="https://ead-workshop.github.io"><img src="https://img.shields.io/badge/ECCV_2026-EAD-8757e6" alt="ECCV 2026 EAD"></a>
-  <a href="https://huggingface.co/spaces/lee1o21k21/DialNav-Challenge"><img src="https://img.shields.io/badge/Challenge-Codabench-1aa5b7" alt="Leaderboard"></a>
+  <a href="https://huggingface.co/spaces/lee1o21k21/DialNav-Challenge"><img src="https://img.shields.io/badge/Challenge-DialNav-1aa5b7" alt="Leaderboard"></a>
   <a href="https://github.com/happilee12/RAINbow/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-4c9a2a" alt="License MIT"></a>
 </p>
 
