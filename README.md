@@ -30,14 +30,7 @@
 > organizers will calculate the final score offline using them.
 >
 > The final winner is decided on the test split only -- val_seen and val_unseen are not
-> taken into account. The test split score is calculated with the
-> [Evaluation Protocol](#evaluation-protocol) described below on this page.
->
-> The [leaderboard](https://huggingface.co/spaces/lee1o21k21/DialNav-Challenge) shows the
-> test success rate and the other reference metrics, but not the test split score. After
-> the challenge period ends, we will contact the top submissions based on that score.
->
-> Because the score is hidden, please check that your SR Test on the leaderboard reflects
+> taken into account. Please check that your SR Test on the leaderboard reflects
 > your own method.
 >
 > ### 2. For submissions made before Aug 10, 23:00 UTC
